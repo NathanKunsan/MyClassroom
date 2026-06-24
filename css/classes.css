@@ -1,0 +1,329 @@
+/* Classes Grid */
+.class-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+/* Class Card */
+.class-card {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    border: 1px solid var(--border-color);
+    transition: all 0.2s ease;
+    cursor: pointer;
+    position: relative;
+}
+
+.class-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.class-card-header {
+    height: 100px;
+    padding: 1.5rem;
+    position: relative;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.class-card-header::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.4) 0%, transparent 100%);
+    pointer-events: none;
+}
+
+.class-card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0;
+    z-index: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.class-card-subtitle {
+    font-size: 0.9rem;
+    opacity: 0.9;
+    z-index: 1;
+}
+
+.class-card-body {
+    padding: 1.5rem;
+}
+
+.class-card-stat {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-sub);
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.class-card-stat i {
+    font-size: 1.2rem;
+    color: var(--primary);
+}
+
+/* Homeroom specific */
+.homeroom-card {
+    border: 2px solid #F59E0B;
+}
+
+.homeroom-empty {
+    border: 2px dashed #CBD5E1;
+    border-radius: 16px;
+    padding: 3rem 2rem;
+    text-align: center;
+    background-color: #F8FAFC;
+    color: #64748B;
+    transition: all 0.2s ease;
+}
+
+.homeroom-empty:hover {
+    border-color: #F59E0B;
+    background-color: #FEF3C7;
+    color: #B45309;
+    cursor: pointer;
+}
+
+.homeroom-empty i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: #CBD5E1;
+    transition: color 0.2s ease;
+}
+
+.homeroom-empty:hover i {
+    color: #F59E0B;
+}
+
+/* Color Picker */
+.color-circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: transform 0.1s;
+}
+.color-circle:hover {
+    transform: scale(1.1);
+}
+/* Classes Stats Boxes */
+.classes-stats-container {
+    display: flex;
+    justify-content: flex-start;
+    gap: 1.5rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+}
+
+.class-stat-box {
+    background-color: white;
+    color: #1E293B;
+    border-radius: 16px;
+    padding: 1.5rem;
+    flex: 1;
+    min-width: 250px;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    border: 1px solid #E2E8F0;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.class-stat-box .stat-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    flex-shrink: 0;
+}
+
+.class-stat-box .stat-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.class-stat-box h4 {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #64748B;
+    margin-bottom: 0.25rem;
+}
+
+.class-stat-box .stat-num {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #1E293B;
+}
+
+/* Card Actions Overlay (Edit/Delete) */
+.class-card-actions {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    display: flex;
+    gap: 0.5rem;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    z-index: 10;
+}
+
+.class-card:hover .class-card-actions {
+    opacity: 1;
+}
+
+.action-icon-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    color: white;
+    font-size: 1.2rem;
+    box-shadow: none;
+    transition: all 0.2s ease;
+    /* Add subtle shadow to icon itself so it stands out against any color */
+    text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+.action-icon-btn:hover {
+    background-color: rgba(255, 255, 255, 0.25);
+    transform: scale(1.1);
+}
+
+/* Empty State adjustment for unified grid */
+.unified-empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 4rem 2rem;
+    color: #64748B;
+    background-color: transparent;
+}
+
+.color-circle.selected {
+    border-color: #333;
+    transform: scale(1.1);
+    box-shadow: 0 0 0 2px white inset;
+}
+
+/* Segmented Control Switch */
+.segmented-control {
+    display: flex;
+    position: relative;
+    background-color: #F1F5F9;
+    border-radius: 99px;
+    padding: 0.3rem;
+    gap: 0.3rem;
+}
+
+.segmented-control input[type="radio"] {
+    display: none;
+}
+
+.segmented-control-label {
+    flex: 1;
+    text-align: center;
+    padding: 0.6rem 1rem;
+    border-radius: 99px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #64748B;
+    transition: color 0.3s ease;
+    margin: 0;
+    z-index: 2;
+}
+
+.segmented-slider {
+    position: absolute;
+    top: 0.3rem;
+    left: 0.3rem;
+    bottom: 0.3rem;
+    width: calc(50% - 0.3rem);
+    background-color: white;
+    border-radius: 99px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.1);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1;
+}
+
+/* Because CSS siblings: the slider is after the radios */
+#typeSubject:checked ~ .segmented-slider {
+    transform: translateX(0);
+}
+
+#homeroomRadio:checked ~ .segmented-slider {
+    transform: translateX(100%);
+}
+
+.segmented-control input[type="radio"]:checked + .segmented-control-label {
+    color: var(--primary);
+}
+
+.segmented-control input[type="radio"]:disabled + .segmented-control-label {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* === RESPONSIVE STYLES === */
+@media (max-width: 768px) {
+    .class-grid {
+        grid-template-columns: 1fr; /* Force 1 column on mobile */
+    }
+    
+    .classes-stats-container {
+        flex-direction: column;
+    }
+    
+    .class-stat-box {
+        min-width: 100%;
+        padding: 1.25rem;
+    }
+
+    .class-stat-box .stat-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.5rem;
+    }
+
+    .class-stat-box .stat-num {
+        font-size: 1.75rem;
+    }
+}
+
+/* Touch Device Support for Hover Actions */
+@media (hover: none) and (pointer: coarse) {
+    .class-card-actions {
+        opacity: 1; /* Always show edit/delete on touch devices */
+        background-color: rgba(0,0,0,0.3);
+        border-radius: 20px;
+        padding: 0.2rem;
+    }
+    
+    .action-icon-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 1.1rem;
+    }
+}

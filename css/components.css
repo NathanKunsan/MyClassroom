@@ -1,0 +1,468 @@
+/* Buttons */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    font-family: 'Kanit', sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    outline: none;
+}
+
+.btn-primary {
+    background-color: var(--primary);
+    color: white;
+    box-shadow: var(--shadow-lg);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background-color: var(--secondary);
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: var(--secondary-hover);
+    transform: translateY(-2px);
+}
+
+.btn-outline {
+    background-color: #FFFFFF;
+    border: 2px solid var(--border-color);
+    color: var(--text-main);
+}
+
+.btn-outline:hover {
+    background-color: rgba(0, 0, 0, 0.02);
+    border-color: #CBD5E1;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-nav-outline {
+    background-color: white;
+    color: var(--text-main);
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-nav-outline:hover {
+    background-color: #F8FAFC;
+    transform: translateY(-2px);
+}
+
+/* User Profile Dropdown */
+.user-dropdown-container {
+    position: relative;
+    display: inline-block;
+}
+
+.user-profile-btn {
+    background-color: #B48ED6;
+    color: white;
+    border: none;
+    padding: 0.5rem 1.25rem;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: inherit;
+    font-size: 0.95rem;
+    cursor: pointer;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.2s;
+}
+
+.user-profile-btn:hover {
+    background-color: #A078C4;
+}
+
+.user-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    background-color: #E2E8F0;
+}
+
+.user-dropdown-menu {
+    position: absolute;
+    right: 0;
+    top: 120%;
+    background-color: white;
+    min-width: 220px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    padding: 0.5rem;
+    z-index: 1000;
+    flex-direction: column;
+
+    /* Animation properties */
+    display: flex;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    /* Smooth slow animation */
+}
+
+.user-dropdown-menu.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.user-dropdown-menu a {
+    color: var(--text-main);
+    text-decoration: none;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+.user-dropdown-menu a:hover {
+    background-color: #F3F4F6;
+}
+
+#userProfileName {
+    max-width: 150px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+}
+
+@media (max-width: 576px) {
+    #userProfileName {
+        display: none;
+        /* ซ่อนชื่อครูบนมือถือเพื่อประหยัดพื้นที่ */
+    }
+
+    .user-profile-btn {
+        padding: 0.5rem;
+    }
+}
+
+/* Custom Auth Modal */
+.auth-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(8px);
+    z-index: 1050;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    animation: fadeInModal 0.2s forwards;
+}
+
+.auth-modal-box {
+    background-color: #FFFFFF;
+    width: 90%;
+    max-width: 450px;
+    border-radius: 20px;
+    padding: 40px 30px;
+    position: relative;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 20px;
+    transform: scale(0.9);
+    animation: popInModal 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.auth-modal-close {
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    width: 50px;
+    height: 50px;
+    background-color: #FFFFFF;
+    border-radius: 50%;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: none;
+    font-size: 1.5rem;
+    color: #64748B;
+    transition: all 0.2s;
+}
+
+.auth-modal-close:hover {
+    color: #EF4444;
+    transform: scale(1.1);
+}
+
+.auth-modal-icon {
+    font-size: 5rem;
+}
+
+.auth-modal-icon.error {
+    color: #EF4444;
+}
+
+.auth-modal-icon.success {
+    color: #10B981;
+}
+
+.auth-modal-text {
+    font-size: 1.2rem;
+    color: #1E293B;
+    font-weight: 600;
+    line-height: 1.5;
+}
+
+.auth-modal-ok-btn {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 0.6rem 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+    font-family: inherit;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.auth-modal-ok-btn:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-2px);
+}
+
+@keyframes fadeInModal {
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes popInModal {
+    to {
+        transform: scale(1);
+    }
+}
+
+/* Navigation Logo */
+/* ... existing content around logo ... */
+
+/* Autocomplete Dropdown */
+.autocomplete-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: var(--shadow-md);
+    max-height: 250px;
+    overflow-y: auto;
+    z-index: 1000;
+    display: none;
+    margin-top: 5px;
+}
+
+.autocomplete-dropdown.show {
+    display: block;
+}
+
+.autocomplete-item {
+    padding: 10px 15px;
+    cursor: pointer;
+    border-bottom: 1px solid #f1f5f9;
+    transition: background-color 0.2s;
+    text-align: left;
+}
+
+.autocomplete-item:last-child {
+    border-bottom: none;
+}
+
+.autocomplete-item:hover {
+    background-color: #f8fafc;
+}
+
+.autocomplete-item-title {
+    font-weight: 600;
+    color: var(--text-main);
+    margin-bottom: 2px;
+}
+
+.autocomplete-item-desc {
+    font-size: 0.8rem;
+    color: var(--text-sub);
+}
+
+.form-group input[readonly] {
+    background-color: #F1F5F9;
+    cursor: not-allowed;
+    color: #64748B;
+}
+.nav-logo {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    gap: 0.5rem;
+}
+
+.nav-logo img {
+    height: 60px; /* Large size, only M and cap */
+    width: auto;
+    object-fit: contain;
+    filter: drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.15));
+    transition: transform 0.2s ease;
+}
+
+.nav-logo img:hover {
+    transform: scale(1.05);
+}
+
+.nav-logo-text {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #01348c; /* Vibrant Royal Blue as requested */
+    letter-spacing: -0.5px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.15), 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* Form Controls (Inputs & Selects) */
+.form-control {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1.5px solid #E2E8F0;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    transition: all 0.2s;
+    background-color: #F8FAFC;
+    color: var(--text-main);
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--primary);
+    background-color: #FFFFFF;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
+.form-control::placeholder {
+    color: #94A3B8;
+}
+
+/* Custom Select Dropdown Styling */
+select.form-control {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1.2em;
+    padding-right: 2.5rem;
+    cursor: pointer;
+}
+
+/* Attendance Status Buttons */
+.status-btn {
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: bold;
+    outline: none;
+}
+
+.status-btn:hover {
+    filter: brightness(0.9);
+}
+
+.active-present {
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+}
+
+.active-late {
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
+}
+
+.active-sick {
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+.active-personal {
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+}
+
+.active-absent {
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+}
+
+/* Custom Flatpickr Styling */
+.flatpickr-day.selected, 
+.flatpickr-day.startRange, 
+.flatpickr-day.endRange, 
+.flatpickr-day.selected.inRange, 
+.flatpickr-day.startRange.inRange, 
+.flatpickr-day.endRange.inRange, 
+.flatpickr-day.selected:focus, 
+.flatpickr-day.startRange:focus, 
+.flatpickr-day.endRange:focus, 
+.flatpickr-day.selected:hover, 
+.flatpickr-day.startRange:hover, 
+.flatpickr-day.endRange:hover, 
+.flatpickr-day.selected.prevMonthDay, 
+.flatpickr-day.startRange.prevMonthDay, 
+.flatpickr-day.endRange.prevMonthDay, 
+.flatpickr-day.selected.nextMonthDay, 
+.flatpickr-day.startRange.nextMonthDay, 
+.flatpickr-day.endRange.nextMonthDay {
+    background: #0078d4 !important;
+    border-color: #0078d4 !important;
+    color: white !important;
+}
+
+.has-attendance-day {
+    color: #10B981 !important;
+    font-weight: bold;
+}
+
+.has-attendance-dot {
+    position: absolute;
+    bottom: 3px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 5px;
+    height: 5px;
+    background-color: #10B981;
+    border-radius: 50%;
+}
+
+/* Disable manual year editing, only allow month change */
+.flatpickr-current-month .numInputWrapper span.arrowUp,
+.flatpickr-current-month .numInputWrapper span.arrowDown {
+    display: none !important;
+}
+
+.flatpickr-current-month input.cur-year {
+    pointer-events: none !important;
+    font-weight: bold !important;
+}

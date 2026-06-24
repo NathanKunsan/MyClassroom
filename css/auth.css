@@ -1,0 +1,208 @@
+/* Forms & Auth Cards */
+.auth-card {
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 2.5rem 2rem;
+    width: 100%;
+    max-width: 380px; /* ทำให้กล่องแคบลง เล็กกะทัดรัด */
+    height: 560px !important; /* ล็อกความสูงให้เท่ากันเป๊ะๆ ทั้ง 3 หน้า */
+    box-shadow: var(--shadow-md);
+    display: flex;
+    flex-direction: column;
+    margin: 2rem auto;
+}
+
+/* ให้ฟอร์มขยายเต็มพื้นที่ที่เหลือ และดันเนื้อหาให้อยู่ตรงกลาง */
+.auth-card > form {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.auth-title {
+    text-align: center;
+    margin-bottom: 0.25rem;
+    font-size: 1.8rem;
+}
+
+.auth-subtitle {
+    text-align: center;
+    color: var(--text-sub);
+    font-weight: 300;
+    font-size: 0.85rem;
+    margin-bottom: 0; /* เอา margin ออก ให้ flex จัดการแทน */
+}
+
+.form-group {
+    margin-bottom: 1rem; /* ลดช่องว่างลงให้ดูเล็กและ compact */
+    display: flex;
+    flex-direction: column;
+}
+
+.form-label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.4rem;
+}
+
+label {
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+.forgot-link {
+    font-size: 0.8rem;
+    color: var(--text-sub);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.forgot-link:hover {
+    color: var(--primary);
+    text-decoration: underline;
+}
+
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.helper-text {
+    font-size: 0.75rem;
+    color: var(--text-sub);
+    margin-top: 0.4rem;
+    line-height: 1.4;
+}
+
+.password-strength-meter {
+    height: 4px;
+    background-color: #E2E8F0;
+    border-radius: 2px;
+    margin-top: 0.6rem;
+    overflow: hidden;
+    width: 100%;
+}
+
+.strength-bar {
+    height: 100%;
+    width: 0%;
+    border-radius: 2px;
+    transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+.strength-weak {
+    background-color: #EF4444; /* แดง */
+    width: 33.33%;
+}
+
+.strength-medium {
+    background-color: #F59E0B; /* ส้ม */
+    width: 66.66%;
+}
+
+.strength-strong {
+    background-color: #10B981; /* เขียว */
+    width: 100%;
+}
+
+input {
+    width: 100%;
+    padding: 0.7rem 2.5rem 0.7rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    font-family: 'Kanit', sans-serif;
+    font-size: 0.9rem;
+    background-color: #F8FAFC;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input:focus {
+    outline: none;
+    border-color: var(--primary);
+    background-color: white;
+    box-shadow: 0 0 0 3px rgba(165, 116, 183, 0.1);
+}
+
+input::placeholder {
+    color: #94A3B8;
+    font-weight: 300;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 1rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-sub);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.password-toggle:hover {
+    color: var(--text-main);
+}
+
+.auth-submit-btn {
+    margin-top: 0.5rem;
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1rem;
+}
+
+.auth-footer {
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--text-sub);
+}
+
+.auth-footer a {
+    color: var(--secondary);
+    font-weight: 500;
+    text-decoration: none;
+    margin-left: 0.25rem;
+}
+
+.auth-footer a:hover {
+    text-decoration: underline;
+}
+
+.auth-footer.register-link a {
+    color: var(--primary);
+}
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    color: #94A3B8;
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: color 0.2s;
+    width: 100%;
+}
+
+.back-link:hover {
+    color: var(--text-main);
+}
+
+/* === RESPONSIVE STYLES === */
+@media (max-width: 480px) {
+    .auth-card {
+        padding: 2rem 1.5rem;
+        margin: 1rem;
+        width: auto;
+        height: auto !important; /* Allow it to shrink if needed on small screens */
+        min-height: 500px;
+    }
+    .auth-title {
+        font-size: 1.5rem;
+    }
+}

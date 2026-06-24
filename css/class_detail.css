@@ -1,0 +1,166 @@
+/* class_detail.css - สไตล์สำหรับหน้ารายละเอียดห้องเรียน (Homeroom & Subject) */
+
+.class-detail-page {
+    background-color: var(--bg-color);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header Area */
+.detail-header {
+    padding: 2rem 2rem 1rem 2rem;
+    color: white;
+    position: relative;
+    box-shadow: var(--shadow-sm);
+    z-index: 10;
+    transition: background-color 0.3s ease;
+}
+
+.detail-header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    margin-bottom: 1rem;
+}
+
+.detail-back-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(4px);
+    transition: all 0.2s ease;
+}
+
+.detail-back-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.detail-title-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.detail-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem 0;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.detail-subtitle {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    margin: 0;
+}
+
+/* Top Tabs Navigation */
+.detail-tabs-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    margin-top: 2rem;
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    /* Hide scrollbar */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.detail-tabs-container::-webkit-scrollbar {
+    display: none;
+}
+
+.detail-tab {
+    padding: 0.8rem 1.5rem;
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+}
+
+.detail-tab:hover {
+    color: white;
+}
+
+.detail-tab.active {
+    color: white;
+    border-bottom-color: white;
+}
+
+/* Main Content Area */
+.detail-main {
+    flex: 1;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.tab-pane {
+    display: none;
+    animation: fadeIn 0.3s ease;
+}
+
+.tab-pane.active {
+    display: block;
+}
+
+/* Empty/Loading States */
+.detail-loading, .detail-empty {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--text-sub);
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: var(--shadow-sm);
+}
+
+.detail-loading i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    animation: spin 1s linear infinite;
+    color: var(--primary);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .detail-header {
+        padding: 1.5rem 1rem 0.5rem 1rem;
+    }
+    
+    .detail-title {
+        font-size: 1.8rem;
+    }
+    
+    .detail-subtitle {
+        font-size: 1rem;
+    }
+    
+    .detail-main {
+        padding: 1rem;
+    }
+    
+    .detail-tab {
+        padding: 0.8rem 1rem;
+        font-size: 1rem;
+    }
+}

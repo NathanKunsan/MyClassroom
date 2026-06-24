@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="../img/logo.png">
+    <title>สมัครสมาชิก - MyClassroom</title>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/skeleton.css">
+    <script src="../js/loader.js"></script>
+</head>
+<body style="justify-content: center;">
+    <div class="auth-card">
+        <div>
+            <h1 class="auth-title">สมัครสมาชิก</h1>
+            <p class="auth-subtitle">สร้างบัญชีเพื่อเริ่มต้นการใช้งาน</p>
+            
+            <form id="registerForm">
+                <div id="registerMsg" class="auth-error-msg" style="display: none; margin-bottom: 1rem; text-align: center; font-size: 0.9rem; padding: 0.75rem; border-radius: 8px;"></div>
+                
+                <div class="form-group">
+                <div class="form-label-row">
+                    <label for="fullname">ชื่อ-นามสกุล ของคุณครู</label>
+                </div>
+                <div class="input-wrapper">
+                    <input type="text" id="fullname" placeholder="ชื่อของคุณครู นามสกุลของคุณครู" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="form-label-row">
+                    <label for="email">Email ของคุณครู</label>
+                </div>
+                <div class="input-wrapper">
+                    <input type="email" id="email" placeholder="example@gmail.com" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="form-label-row">
+                    <label for="password">รหัสผ่าน</label>
+                </div>
+                <div class="input-wrapper">
+                    <input type="password" id="password" placeholder="ตั้งรหัสผ่านของคุณ" required>
+                    <button type="button" class="password-toggle" tabindex="-1">
+                        <i class="ph ph-eye-slash"></i>
+                    </button>
+                </div>
+                <div class="password-strength-meter">
+                    <div class="strength-bar"></div>
+                </div>
+                <div class="helper-text">รหัสผ่านต้องมี 8 ตัวอักษรขึ้นไป ประกอบด้วยตัวพิมพ์เล็ก พิมพ์ใหญ่ และตัวเลข</div>
+            </div>
+
+            <button type="submit" class="btn btn-primary auth-submit-btn">สมัครสมาชิก</button>
+        </form>
+
+        <div class="auth-footer">
+            มีบัญชีอยู่แล้ว? <a href="login.html">เข้าสู่ระบบ</a>
+        </div>
+
+        <div class="center-content">
+            <a href="../index.html" class="back-link">
+                <i class="ph ph-arrow-left"></i> ย้อนกลับไปหน้าแรก
+            </a>
+        </div>
+    </div>
+
+    <!-- Supabase SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabase.js"></script>
+    <script src="../js/guard.js"></script>
+    
+    <script src="../js/auth.js"></script>
+    <script src="../js/protect.js"></script>
+</body>
+</html>

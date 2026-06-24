@@ -1,0 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --bg-color: #FDF8E8;
+    --card-bg: #FFFFFF;
+    --feature-bg: #FDE8ED;
+    --text-main: #1A1A1A;
+    --text-sub: #7A7A7A;
+    --primary: #A574B7;
+    --primary-hover: #9163A3;
+    --secondary: #659E9E;
+    --secondary-hover: #548A8A;
+    --border-color: #E2E8F0;
+    --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.03);
+    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.05);
+    --shadow-lg: 0 12px 32px rgba(165, 116, 183, 0.15);
+    --gold: #F8D38D;
+}

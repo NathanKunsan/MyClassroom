@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="img/logo.png">
+    <title>MyClassroom - ผู้ช่วยจัดการห้องเรียน</title>
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase.js"></script>
+    <script src="js/guard.js"></script>
+    <script src="js/script.js"></script>
+    <script src="js/protect.js"></script>
+    <link rel="stylesheet" href="css/skeleton.css">
+    <script src="js/loader.js"></script>
+    <link rel="stylesheet" href="css/style.css?v=2">
+</head>
+
+<body>
+
+    <!-- Sticky Navigation Bar -->
+    <nav class="sticky-nav">
+        <div class="nav-content">
+            <a href="index.html" class="nav-logo">
+                <span class="nav-logo-text">MyClassroom</span>
+            </a>
+            <div class="nav-actions">
+                <a href="html/login.html" class="btn btn-nav-outline">
+                    <i class="ph ph-sign-in"></i> เข้าสู่ระบบ
+                </a>
+                <a href="html/register.html" class="btn btn-primary">
+                    <i class="ph ph-user"></i> สมัครสมาชิก
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <div class="container">
+
+        <!-- Hero Section -->
+        <header class="center-content" style="margin-bottom: 2rem;">
+            <h1 style="font-size: 3rem;">MyClassroom</h1>
+            <p class="subtitle">ผู้ช่วยจัดการห้องเรียน
+                ที่ทำให้งานของครูง่ายขึ้น<br>และเปลี่ยนบรรยากาศการเรียนให้สนุกกว่าที่เคย</p>
+        </header>
+
+        <div class="hero-buttons">
+            <a href="html/login.html" class="btn btn-nav-outline" style="font-size: 1.1rem; padding: 1rem 2rem;">
+                <i class="ph ph-sign-in"></i> เข้าสู่ระบบ
+            </a>
+            <a href="html/register.html" class="btn btn-primary" style="font-size: 1.1rem; padding: 1rem 2rem;">
+                <i class="ph ph-user"></i> สมัครสมาชิก
+            </a>
+        </div>
+
+        <!-- ฟีเจอร์แนะนำ -->
+        <section style="margin-top: 4rem; margin-bottom: 4rem;">
+            <h2 class="section-title">ฟีเจอร์แนะนำ</h2>
+            <div class="features-grid-3">
+                <div class="feature-card">
+                    <i class="ph ph-clock feature-icon"></i>
+                    <h3 class="feature-title">การเช็กชื่อที่รวดเร็ว</h3>
+                    <p class="feature-desc">แค่กดนิ้ว ๆ หน่อย ๆ ก็เช็กชื่อนักเรียนได้แล้ว</p>
+                </div>
+                <div class="feature-card">
+                    <i class="ph ph-users-three feature-icon"></i>
+                    <h3 class="feature-title">การจัดที่นั่งของนักเรียน</h3>
+                    <p class="feature-desc">การจัดที่นั่งในห้องเรียนจะไม่ยุ่งยากอีกต่อไป</p>
+                </div>
+                <div class="feature-card">
+                    <i class="ph ph-confetti feature-icon"></i>
+                    <h3 class="feature-title">กิจกรรมกับนักเรียน</h3>
+                    <p class="feature-desc">ห้องเรียนต้องการสีสันเพิ่มเหรอ? ได้สิ! คุณครูจัดให้ได้แน่นอน</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section (White Box) -->
+        <section class="features-wrapper">
+            <h2 class="section-title">ฟีเจอร์ทั้งหมด</h2>
+
+            <div class="features-grid-4">
+                <div class="feature-card">
+                    <i class="ph ph-check-square feature-icon"></i>
+                    <h3 class="feature-title">เช็กชื่อเข้าเรียน</h3>
+                    <p class="feature-desc">เช็กชื่อนักเรียนอย่างรวดเร็ว ประหยัดเวลา และสรุปข้อมูลการมาเรียนให้อัตโนมัติ
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <i class="ph ph-users feature-icon"></i>
+                    <h3 class="feature-title">สุ่มจัดกลุ่ม</h3>
+                    <p class="feature-desc">จับกลุ่มนักเรียนง่ายๆ ด้วยการสุ่ม หรือจัดกลุ่มตามเงื่อนไขที่กำหนดได้ทันที
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <i class="ph ph-user-focus feature-icon"></i>
+                    <h3 class="feature-title">วงล้อสุ่มชื่อ</h3>
+                    <p class="feature-desc">สร้างความตื่นเต้นในห้องเรียนด้วยการสุ่มเรียกชื่อนักเรียนตอบคำถาม</p>
+                </div>
+                <div class="feature-card">
+                    <i class="ph ph-star feature-icon"></i>
+                    <h3 class="feature-title">กระดานคะแนน</h3>
+                    <p class="feature-desc">ให้คะแนนพฤติกรรมหรือกิจกรรมในห้องเรียน สร้างแรงจูงใจในการเรียน</p>
+                </div>
+                <div class="feature-card">
+                    <i class="ph ph-timer feature-icon"></i>
+                    <h3 class="feature-title">จับเวลาทำกิจกรรม</h3>
+                    <p class="feature-desc">นาฬิกาจับเวลาถอยหลังบนหน้าจอ ควบคุมเวลาในการทำแบบทดสอบหรือใบงาน</p>
+                </div>
+                <div class="feature-card">
+                    <i class="ph ph-chart-bar feature-icon"></i>
+                    <h3 class="feature-title">รายงานและสถิติ</h3>
+                    <p class="feature-desc">ดูข้อมูลสถิติการเรียนย้อนหลังของนักเรียนแต่ละคนได้อย่างง่ายดาย</p>
+                </div>
+                <div class="feature-card">
+                    <i class="ph ph-calendar-blank feature-icon"></i>
+                    <h3 class="feature-title">ตารางสอน</h3>
+                    <p class="feature-desc">จัดการคาบเรียนและตารางสอนของคุณครูได้ในที่เดียว ไม่พลาดทุกคลาส</p>
+                </div>
+                <div class="feature-card">
+                    <i class="ph ph-books feature-icon"></i>
+                    <h3 class="feature-title">จัดการการบ้าน</h3>
+                    <p class="feature-desc">บันทึกการสั่งงานและการส่งงานของนักเรียน พร้อมแจ้งเตือนกำหนดส่ง</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Mockup / Preview Section -->
+        <section class="mockup-section" style="margin-bottom: 4rem; width: 100%; text-align: center;">
+            <h2 class="section-title">คลิปวิธีการใช้งาน</h2>
+            <div class="mockup-container"
+                style="width: 100%; aspect-ratio: 16/9; margin: 0 auto; border-radius: 20px; overflow: hidden; box-shadow: var(--shadow-md);">
+                <iframe width="100%" height="100%" src="https://www.youtube.com/embed/L0hCbv8FAqQ"
+                    title="YouTube video player" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen style="display: block;"></iframe>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <h3>MyClassroom</h3>
+                <p>ผู้ช่วยจัดการห้องเรียนที่รู้ใจคุณครูที่สุด</p>
+            </div>
+            <div class="footer-links">
+                <a href="#"><i class="ph ph-shield-check"></i> นโยบายส่วนตัว</a>
+                <a href="#"><i class="ph ph-file-text"></i> เงื่อนไขการใช้งาน</a>
+                <a href="#"><i class="ph ph-envelope-simple"></i> ติดต่อเรา</a>
+            </div>
+            <div class="footer-copyright">
+                Copyright 2026 MyClassroom. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Script ควบคุม Navbar เฉพาะหน้า Index -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const nav = document.querySelector('.sticky-nav');
+            const heroButtons = document.querySelector('.hero-buttons');
+
+            if (nav && heroButtons) {
+                const checkNavVisibility = () => {
+                    // 1. ถ้าจอเล็ก (มือถือ/แท็บเล็ต) ให้ Navbar แสดงตลอด (ปิดฟังก์ชันซ่อน)
+                    if (window.innerWidth < 992) {
+                        nav.style.position = 'sticky';
+                        nav.style.top = '0';
+                        nav.style.transition = 'none';
+                        return;
+                    }
+
+                    // 2. ถ้าจอใหญ่ ให้ซ่อน/แสดงตามระยะเลื่อน
+                    nav.style.position = 'fixed';
+                    nav.style.transition = 'top 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+
+                    // ถ้าเลื่อนหน้าจอจนกรอบด้านบนของปุ่มเหลือน้อยกว่า 60px (เริ่มโดนบัง)
+                    if (heroButtons.getBoundingClientRect().top < 60) {
+                        nav.style.top = '0'; // เลื่อน Navbar ลงมาแสดง
+                    } else {
+                        nav.style.top = '-100px'; // ซ่อนกลับไป
+                    }
+                };
+
+                window.addEventListener('scroll', checkNavVisibility);
+                window.addEventListener('resize', checkNavVisibility); // เช็คตอนย่อขยายจอด้วย
+
+                // เช็คสถานะทันทีตอนโหลด
+                checkNavVisibility();
+            }
+        });
+    </script>
+</body>
+
+</html>

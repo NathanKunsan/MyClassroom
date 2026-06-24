@@ -1,0 +1,1523 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ห้องประจำชั้น - MyClassroom</title>
+    <link rel="icon" type="image/png" href="../img/logo.png">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/class_detail.css">
+</head>
+
+<body class="class-detail-page">
+
+    <!-- Header Section (Color depends on class setting) -->
+    <header class="detail-header" id="classHeader" style="background-color: #6366F1;">
+        <div class="detail-header-top">
+            <a href="classes.html" class="detail-back-btn">
+                <i class="ph ph-arrow-left"></i> กลับไปจัดการห้องเรียน
+            </a>
+            <div id="teacherNameDisplay" style="font-size: 0.9rem; opacity: 0.9;">
+                ครูที่ปรึกษา: <span id="teacherNameSpan">กำลังโหลด...</span>
+            </div>
+        </div>
+
+        <div class="detail-title-container">
+            <h1 class="detail-title">
+                <i class="ph ph-crown"></i>
+                <span id="classNameSpan">ห้องประจำชั้น</span>
+            </h1>
+            <p class="detail-subtitle" id="classSubtitleSpan">กำลังโหลดข้อมูล...</p>
+        </div>
+
+        <!-- Top Tabs Navigation -->
+        <div class="detail-tabs-wrapper"
+            style="position: relative; max-width: 1200px; margin: 2rem auto 0 auto; display: flex; align-items: center;">
+            <button class="scroll-btn"
+                onclick="let container = document.querySelector('.detail-tabs-container'); container.scrollBy({left: -container.clientWidth * 0.8, behavior: 'smooth'})"
+                style="background: rgba(255,255,255,0.2); border: none; color: white; border-radius: 50%; width: 36px; height: 36px; cursor: pointer; display: flex; align-items: center; justify-content: center; margin-right: 0.5rem; flex-shrink: 0; transition: background 0.2s;"
+                onmouseover="this.style.background='rgba(255,255,255,0.4)'"
+                onmouseout="this.style.background='rgba(255,255,255,0.2)'">
+                <i class="ph ph-caret-left" style="font-size: 1.2rem;"></i>
+            </button>
+
+            <nav class="detail-tabs-container" style="margin-top: 0; flex-grow: 1; scroll-behavior: smooth;">
+                <a href="#" class="detail-tab active" data-tab="dashboard-tab">
+                    <i class="ph ph-squares-four"></i> แดชบอร์ด
+                </a>
+                <a href="#" class="detail-tab" data-tab="students-tab">
+                    <i class="ph ph-users"></i> รายชื่อนักเรียน
+                </a>
+                <a href="#" class="detail-tab" data-tab="attendance-tab">
+                    <i class="ph ph-calendar-check"></i> เช็กชื่อโฮมรูม
+                </a>
+                <a href="#" class="detail-tab" onclick="openFeature('behavior'); return false;" data-tab="behavior-tab">
+                    <i class="ph ph-star"></i> พฤติกรรม
+                </a>
+                <a href="#" class="detail-tab" onclick="openFeature('health'); return false;" data-tab="health-tab">
+                    <i class="ph ph-heartbeat"></i> สุขภาพ (BMI)
+                </a>
+                <a href="#" class="detail-tab" onclick="openFeature('care'); return false;" data-tab="care-tab">
+                    <i class="ph ph-house-line"></i> เยี่ยมบ้าน
+                </a>
+                <a href="#" class="detail-tab" onclick="openFeature('seating'); return false;" data-tab="seating-tab">
+                    <i class="ph ph-chair"></i> ผังที่นั่ง
+                </a>
+                <a href="#" class="detail-tab" onclick="openFeature('cleaning'); return false;" data-tab="cleaning-tab">
+                    <i class="ph ph-broom"></i> เวรทำความสะอาด
+                </a>
+                <a href="#" class="detail-tab" onclick="openFeature('fund'); return false;" data-tab="fund-tab">
+                    <i class="ph ph-piggy-bank"></i> เงินห้อง
+                </a>
+                <a href="#" class="detail-tab" onclick="openFeature('academic'); return false;" data-tab="academic-tab">
+                    <i class="ph ph-book-open"></i> วิชาเรียน
+                </a>
+                <a href="#" class="detail-tab" onclick="openFeature('activities'); return false;"
+                    data-tab="activities-tab">
+                    <i class="ph ph-flag-pennant"></i> กิจกรรม
+                </a>
+                <a href="#" class="detail-tab" onclick="openFeature('morning_talk'); return false;"
+                    data-tab="morning_talk-tab">
+                    <i class="ph ph-coffee"></i> สนทนายามเช้า
+                </a>
+                <a href="#" class="detail-tab" onclick="openFeature('teaching_plans'); return false;"
+                    data-tab="teaching_plans-tab">
+                    <i class="ph ph-books"></i> จัดทำแผนต่าง ๆ
+                </a>
+            </nav>
+
+            <button class="scroll-btn"
+                onclick="let container = document.querySelector('.detail-tabs-container'); container.scrollBy({left: container.clientWidth * 0.8, behavior: 'smooth'})"
+                style="background: rgba(255,255,255,0.2); border: none; color: white; border-radius: 50%; width: 36px; height: 36px; cursor: pointer; display: flex; align-items: center; justify-content: center; margin-left: 0.5rem; flex-shrink: 0; transition: background 0.2s;"
+                onmouseover="this.style.background='rgba(255,255,255,0.4)'"
+                onmouseout="this.style.background='rgba(255,255,255,0.2)'">
+                <i class="ph ph-caret-right" style="font-size: 1.2rem;"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="detail-main">
+
+        <!-- Tab 0: Dashboard -->
+        <div id="dashboard-tab" class="tab-pane active">
+            <div class="card"
+                style="padding: 2rem; background-color: #F8FAFC; border-radius: 24px; border: 1px solid #E2E8F0; box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.02);">
+                <h2
+                    style="margin-top: 0; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem; color: #1E293B;">
+                    <i class="ph ph-squares-four" style="color: #6366F1;"></i> เมนูการจัดการห้องประจำชั้น
+                </h2>
+                <div class="dashboard-grid"
+                    style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem;">
+
+                    <!-- Core Feature: Students List -->
+                    <div class="card dashboard-card"
+                        onclick="document.querySelector('.detail-tab[data-tab=\'students-tab\']').click()"
+                        style="padding: 1.5rem; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid #E2E8F0; border-left: 6px solid #3B82F6; border-radius: 16px; background-color: #ffffff; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);"
+                        onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04)'; this.style.borderColor='#3B82F6';"
+                        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)'; this.style.borderColor='#E2E8F0';">
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                            <div
+                                style="width: 48px; height: 48px; border-radius: 12px; background: #DBEAFE; color: #3B82F6; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                                <i class="ph ph-users"></i>
+                            </div>
+                            <div>
+                                <h3 style="margin: 0; font-size: 1.1rem;">รายชื่อนักเรียน</h3>
+                                <p style="margin: 0; font-size: 0.85rem; color: var(--text-sub);">จัดการและเพิ่มรายชื่อ
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Core Feature: Attendance -->
+                    <div class="card dashboard-card"
+                        onclick="document.querySelector('.detail-tab[data-tab=\'attendance-tab\']').click()"
+                        style="padding: 1.5rem; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid #E2E8F0; border-left: 6px solid #10B981; border-radius: 16px; background-color: #ffffff; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);"
+                        onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04)'; this.style.borderColor='#10B981';"
+                        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)'; this.style.borderColor='#E2E8F0';">
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                            <div
+                                style="width: 48px; height: 48px; border-radius: 12px; background: #D1FAE5; color: #10B981; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                                <i class="ph ph-calendar-check"></i>
+                            </div>
+                            <div>
+                                <h3 style="margin: 0; font-size: 1.1rem;">เช็กชื่อโฮมรูม</h3>
+                                <p style="margin: 0; font-size: 0.85rem; color: var(--text-sub);">เช็กชื่อมา สาย ลา ขาด
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Feature 1: Behavior & Core Values -->
+                    <div class="card dashboard-card"
+                        onclick="document.querySelector('.detail-tab[data-tab=\'behavior-tab\']').click()"
+                        style="padding: 1.5rem; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid #E2E8F0; border-left: 6px solid #8B5CF6; border-radius: 16px; background-color: #ffffff; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);"
+                        onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04)'; this.style.borderColor='#8B5CF6';"
+                        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)'; this.style.borderColor='#E2E8F0';">
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                            <div
+                                style="width: 48px; height: 48px; border-radius: 12px; background: #EDE9FE; color: #8B5CF6; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                                <i class="ph ph-star"></i>
+                            </div>
+                            <div>
+                                <h3 style="margin: 0; font-size: 1.1rem;">คุณลักษณะอันพึงประสงค์</h3>
+                                <p style="margin: 0; font-size: 0.85rem; color: var(--text-sub);">ประเมินพฤติกรรม 8
+                                    ประการ</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Feature 2: Health & BMI -->
+                    <div class="card dashboard-card"
+                        onclick="document.querySelector('.detail-tab[data-tab=\'health-tab\']').click()"
+                        style="padding: 1.5rem; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid #E2E8F0; border-left: 6px solid #10B981; border-radius: 16px; background-color: #ffffff; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);"
+                        onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04)'; this.style.borderColor='#10B981';"
+                        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)'; this.style.borderColor='#E2E8F0';">
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                            <div
+                                style="width: 48px; height: 48px; border-radius: 12px; background: #D1FAE5; color: #10B981; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                                <i class="ph ph-heartbeat"></i>
+                            </div>
+                            <div>
+                                <h3 style="margin: 0; font-size: 1.1rem;">บันทึกสุขภาพ / BMI</h3>
+                                <p style="margin: 0; font-size: 0.85rem; color: var(--text-sub);">น้ำหนัก ส่วนสูง
+                                    ประวัติแพ้อาหาร</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Feature 3: Student Care (Home Visit) -->
+                    <div class="card dashboard-card"
+                        onclick="document.querySelector('.detail-tab[data-tab=\'care-tab\']').click()"
+                        style="padding: 1.5rem; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid #E2E8F0; border-left: 6px solid #F59E0B; border-radius: 16px; background-color: #ffffff; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);"
+                        onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04)'; this.style.borderColor='#F59E0B';"
+                        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)'; this.style.borderColor='#E2E8F0';">
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                            <div
+                                style="width: 48px; height: 48px; border-radius: 12px; background: #FEF3C7; color: #F59E0B; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                                <i class="ph ph-house-line"></i>
+                            </div>
+                            <div>
+                                <h3 style="margin: 0; font-size: 1.1rem;">ระบบดูแลช่วยเหลือ</h3>
+                                <p style="margin: 0; font-size: 0.85rem; color: var(--text-sub);">
+                                    เยี่ยมบ้านและคัดกรองนักเรียน</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Feature 4: Seating Chart -->
+                    <div class="card dashboard-card"
+                        onclick="document.querySelector('.detail-tab[data-tab=\'seating-tab\']').click()"
+                        style="padding: 1.5rem; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid #E2E8F0; border-left: 6px solid #3B82F6; border-radius: 16px; background-color: #ffffff; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);"
+                        onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04)'; this.style.borderColor='#3B82F6';"
+                        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)'; this.style.borderColor='#E2E8F0';">
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                            <div
+                                style="width: 48px; height: 48px; border-radius: 12px; background: #DBEAFE; color: #3B82F6; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                                <i class="ph ph-map-trifold"></i>
+                            </div>
+                            <div>
+                                <h3 style="margin: 0; font-size: 1.1rem;">ผังที่นั่งเรียน</h3>
+                                <p style="margin: 0; font-size: 0.85rem; color: var(--text-sub);">
+                                    จัดตำแหน่งที่นั่งในชั้นเรียน</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Feature 5: Cleaning Roster -->
+                    <div class="card dashboard-card"
+                        onclick="document.querySelector('.detail-tab[data-tab=\'cleaning-tab\']').click()"
+                        style="padding: 1.5rem; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid #E2E8F0; border-left: 6px solid #0EA5E9; border-radius: 16px; background-color: #ffffff; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);"
+                        onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04)'; this.style.borderColor='#0EA5E9';"
+                        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)'; this.style.borderColor='#E2E8F0';">
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                            <div
+                                style="width: 48px; height: 48px; border-radius: 12px; background: #E0F2FE; color: #0EA5E9; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                                <i class="ph ph-broom"></i>
+                            </div>
+                            <div>
+                                <h3 style="margin: 0; font-size: 1.1rem;">เวรทำความสะอาด</h3>
+                                <p style="margin: 0; font-size: 0.85rem; color: var(--text-sub);">
+                                    จัดกลุ่มทำความสะอาดประจำวัน</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Feature 6: Class Fund -->
+                    <div class="card dashboard-card"
+                        onclick="document.querySelector('.detail-tab[data-tab=\'fund-tab\']').click()"
+                        style="padding: 1.5rem; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid #E2E8F0; border-left: 6px solid #14B8A6; border-radius: 16px; background-color: #ffffff; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);"
+                        onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04)'; this.style.borderColor='#14B8A6';"
+                        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)'; this.style.borderColor='#E2E8F0';">
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                            <div
+                                style="width: 48px; height: 48px; border-radius: 12px; background: #CCFBF1; color: #14B8A6; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                                <i class="ph ph-piggy-bank"></i>
+                            </div>
+                            <div>
+                                <h3 style="margin: 0; font-size: 1.1rem;">เงินห้องประจำชั้น</h3>
+                                <p style="margin: 0; font-size: 0.85rem; color: var(--text-sub);">
+                                    จัดการเงินห้องและกองกลาง</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Feature 7: Academic Overview -->
+                    <div class="card dashboard-card"
+                        onclick="document.querySelector('.detail-tab[data-tab=\'academic-tab\']').click()"
+                        style="padding: 1.5rem; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid #E2E8F0; border-left: 6px solid #EF4444; border-radius: 16px; background-color: #ffffff; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);"
+                        onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04)'; this.style.borderColor='#EF4444';"
+                        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)'; this.style.borderColor='#E2E8F0';">
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                            <div
+                                style="width: 48px; height: 48px; border-radius: 12px; background: #FEE2E2; color: #EF4444; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                                <i class="ph ph-chart-line-up"></i>
+                            </div>
+                            <div>
+                                <h3 style="margin: 0; font-size: 1.1rem;">สรุปผลการเรียน</h3>
+                                <p style="margin: 0; font-size: 0.85rem; color: var(--text-sub);">8 กลุ่มสาระ (เตรียม
+                                    ปพ.6)</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Feature 8: Homeroom Activities -->
+                    <div class="card dashboard-card"
+                        onclick="document.querySelector('.detail-tab[data-tab=\'activities-tab\']').click()"
+                        style="padding: 1.5rem; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid #E2E8F0; border-left: 6px solid #F59E0B; border-radius: 16px; background-color: #ffffff; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);"
+                        onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04)'; this.style.borderColor='#F59E0B';"
+                        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)'; this.style.borderColor='#E2E8F0';">
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                            <div
+                                style="width: 48px; height: 48px; border-radius: 12px; background: #FEF3C7; color: #F59E0B; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                                <i class="ph ph-flag-pennant"></i>
+                            </div>
+                            <div>
+                                <h3 style="margin: 0; font-size: 1.1rem;">กิจกรรมโฮมรูม</h3>
+                                <p style="margin: 0; font-size: 0.85rem; color: var(--text-sub);">รวบรวมกิจกรรมต่างๆ
+                                    ในห้อง</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Feature 9: Morning Talk -->
+                    <div class="card dashboard-card"
+                        onclick="document.querySelector('.detail-tab[data-tab=\'morning_talk-tab\']').click()"
+                        style="padding: 1.5rem; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid #E2E8F0; border-left: 6px solid #D946EF; border-radius: 16px; background-color: #ffffff; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);"
+                        onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04)'; this.style.borderColor='#D946EF';"
+                        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)'; this.style.borderColor='#E2E8F0';">
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                            <div
+                                style="width: 48px; height: 48px; border-radius: 12px; background: #FAE8FF; color: #D946EF; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                                <i class="ph ph-coffee"></i>
+                            </div>
+                            <div>
+                                <h3 style="margin: 0; font-size: 1.1rem;">โฮมรูม/สนทนายามเช้า</h3>
+                                <p style="margin: 0; font-size: 0.85rem; color: var(--text-sub);">
+                                    บันทึกหัวข้อพูดคุยยามเช้า</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Feature 10: Teaching Plans (Replaced Announcements) -->
+                    <div class="card dashboard-card"
+                        onclick="document.querySelector('.detail-tab[data-tab=\'teaching_plans-tab\']').click()"
+                        style="padding: 1.5rem; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid #E2E8F0; border-left: 6px solid #64748B; border-radius: 16px; background-color: #ffffff; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);"
+                        onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04)'; this.style.borderColor='#64748B';"
+                        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)'; this.style.borderColor='#E2E8F0';">
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                            <div
+                                style="width: 48px; height: 48px; border-radius: 12px; background: #F1F5F9; color: #64748B; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                                <i class="ph ph-books"></i>
+                            </div>
+                            <div>
+                                <h3 style="margin: 0; font-size: 1.1rem;">จัดทำแผนต่าง ๆ</h3>
+                                <p style="margin: 0; font-size: 0.85rem; color: var(--text-sub);">แผนการสอนระยะยาว,
+                                    รายคาบ, ฯลฯ</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 1: Students -->
+        <div id="students-tab" class="tab-pane">
+            <div class="card" style="padding: 2rem;">
+                <button class="btn btn-secondary" onclick="backToDashboard()"
+                    style="margin-bottom: 1rem; border: none; background: #F1F5F9; color: #475569;"><i
+                        class="ph ph-arrow-left"></i> กลับหน้าแดชบอร์ด</button>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h2 style="margin: 0; font-size: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="ph ph-users" style="color: var(--primary);"></i> รายชื่อนักเรียน
+                    </h2>
+                    <div style="display: flex; gap: 0.8rem; align-items: center; position: relative;">
+                        <button class="btn btn-primary"
+                            style="background-color: #10B981; border: none; box-shadow: none;"
+                            onclick="openAddStudentModal()">
+                            <i class="ph ph-user-plus"></i> เพิ่มรายชื่อนักเรียน
+                        </button>
+                        <div style="position: relative;">
+                            <button class="btn btn-primary"
+                                style="background-color: #8B5CF6; border: none; box-shadow: none;"
+                                onclick="toggleDownloadMenu(event)">
+                                <i class="ph ph-download-simple"></i> ดาวน์โหลด <i class="ph ph-caret-down"
+                                    style="font-size: 0.8rem;"></i>
+                            </button>
+                            <div id="downloadMenu"
+                                style="display: none; position: absolute; right: 0; top: 100%; margin-top: 0.5rem; background: white; border-radius: 8px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); overflow: hidden; z-index: 50; min-width: 180px; border: 1px solid var(--border-color);">
+                                <a href="#" onclick="event.preventDefault(); exportStudents('csv')"
+                                    style="display: flex; align-items: center; gap: 0.8rem; padding: 0.8rem 1rem; color: var(--text-color); text-decoration: none; transition: background-color 0.2s;"
+                                    onmouseover="this.style.backgroundColor='#F8FAFC'"
+                                    onmouseout="this.style.backgroundColor='transparent'">
+                                    <i class="ph ph-file-csv" style="color: #3B82F6; font-size: 1.2rem;"></i> ไฟล์ CSV
+                                </a>
+                                <a href="#" onclick="event.preventDefault(); exportStudents('xlsx')"
+                                    style="display: flex; align-items: center; gap: 0.8rem; padding: 0.8rem 1rem; color: var(--text-color); text-decoration: none; transition: background-color 0.2s; border-top: 1px solid var(--border-color);"
+                                    onmouseover="this.style.backgroundColor='#F8FAFC'"
+                                    onmouseout="this.style.backgroundColor='transparent'">
+                                    <i class="ph ph-microsoft-excel-logo"
+                                        style="color: #10B981; font-size: 1.2rem;"></i> ไฟล์ Excel
+                                </a>
+                                <a href="#" onclick="event.preventDefault(); exportStudents('pdf')"
+                                    style="display: flex; align-items: center; gap: 0.8rem; padding: 0.8rem 1rem; color: var(--text-color); text-decoration: none; transition: background-color 0.2s; border-top: 1px solid var(--border-color);"
+                                    onmouseover="this.style.backgroundColor='#F8FAFC'"
+                                    onmouseout="this.style.backgroundColor='transparent'">
+                                    <i class="ph ph-file-pdf" style="color: #EF4444; font-size: 1.2rem;"></i> ไฟล์ PDF
+                                </a>
+                                <a href="#" onclick="event.preventDefault(); exportStudents('qr')"
+                                    style="display: flex; align-items: center; gap: 0.8rem; padding: 0.8rem 1rem; color: var(--text-color); text-decoration: none; transition: background-color 0.2s; border-top: 1px solid var(--border-color);"
+                                    onmouseover="this.style.backgroundColor='#F8FAFC'"
+                                    onmouseout="this.style.backgroundColor='transparent'">
+                                    <i class="ph ph-qr-code" style="color: #8B5CF6; font-size: 1.2rem;"></i> รหัส QR
+                                    (ZIP)
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-empty">
+                    <i class="ph ph-users-three"></i>
+                    <h3>กรุณาเพิ่มรายชื่อนักเรียนเสียก่อน</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 2: Attendance -->
+        <div id="attendance-tab" class="tab-pane">
+            <div class="card" style="padding: 2rem;">
+                <button class="btn btn-secondary" onclick="backToDashboard()"
+                    style="margin-bottom: 1rem; border: none; background: #F1F5F9; color: #475569;"><i
+                        class="ph ph-arrow-left"></i> กลับหน้าแดชบอร์ด</button>
+                <div
+                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+                    <h2 style="margin: 0; font-size: 1.5rem; display: flex; align-items: center; gap: 0.5rem;"
+                        id="attendanceTitle">
+                        <i class="ph ph-calendar-check" style="color: var(--primary);"></i> เช็กชื่อโฮมรูมประจำวัน
+                    </h2>
+
+                    <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+                        <button id="attendanceDateBtn" class="btn"
+                            style="background: white; border: 1px solid var(--border-color); color: var(--text-color); display: flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1rem; border-radius: 8px; box-shadow: var(--shadow-sm); cursor: pointer; margin-right: 0.5rem;">
+                            <i class="ph ph-calendar-blank" style="color: var(--primary);"></i> <span
+                                id="displayDateText" style="font-weight: 500;">เลือกวันที่</span>
+                        </button>
+                        <button class="btn" onclick="markAllPresent()"
+                            style="background-color: #10B981; color: white; border: none; padding: 0.5rem 1rem; font-size: 0.9rem; border-radius: 20px; box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);"><i
+                                class="ph ph-check-circle"></i> มาทุกคน</button>
+                        <button class="btn btn-outline" onclick="clearAllAttendance()"
+                            style="padding: 0.5rem 1rem; font-size: 0.9rem; color: #EF4444; border-color: #fca5a5; border-radius: 20px;"><i
+                                class="ph ph-eraser"></i> เคลียร์ทุกคน</button>
+                        <div style="position: relative; margin-left: 0.5rem;">
+                            <button class="btn btn-primary"
+                                style="background-color: #8B5CF6; border: none; box-shadow: none; border-radius: 20px; padding: 0.5rem 1rem; font-size: 0.9rem;"
+                                onclick="toggleAttendanceDownloadMenu(event)">
+                                <i class="ph ph-download-simple"></i> ส่งออก <i class="ph ph-caret-down"
+                                    style="font-size: 0.8rem;"></i>
+                            </button>
+                            <div id="attendanceDownloadMenu"
+                                style="display: none; position: absolute; right: 0; top: 100%; margin-top: 0.5rem; background: white; border-radius: 8px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); overflow: hidden; z-index: 50; min-width: 150px; border: 1px solid var(--border-color);">
+                                <a href="#" onclick="event.preventDefault(); exportAttendance('csv')"
+                                    style="display: flex; align-items: center; gap: 0.8rem; padding: 0.8rem 1rem; color: var(--text-color); text-decoration: none; transition: background-color 0.2s;"
+                                    onmouseover="this.style.backgroundColor='#F8FAFC'"
+                                    onmouseout="this.style.backgroundColor='transparent'">
+                                    <i class="ph ph-file-csv" style="color: #3B82F6; font-size: 1.1rem;"></i> ไฟล์ CSV
+                                </a>
+                                <a href="#" onclick="event.preventDefault(); exportAttendance('xlsx')"
+                                    style="display: flex; align-items: center; gap: 0.8rem; padding: 0.8rem 1rem; color: var(--text-color); text-decoration: none; transition: background-color 0.2s; border-top: 1px solid var(--border-color);"
+                                    onmouseover="this.style.backgroundColor='#F8FAFC'"
+                                    onmouseout="this.style.backgroundColor='transparent'">
+                                    <i class="ph ph-microsoft-excel-logo"
+                                        style="color: #10B981; font-size: 1.1rem;"></i> ไฟล์ Excel
+                                </a>
+                                <a href="#" onclick="event.preventDefault(); exportAttendance('pdf')"
+                                    style="display: flex; align-items: center; gap: 0.8rem; padding: 0.8rem 1rem; color: var(--text-color); text-decoration: none; transition: background-color 0.2s; border-top: 1px solid var(--border-color);"
+                                    onmouseover="this.style.backgroundColor='#F8FAFC'"
+                                    onmouseout="this.style.backgroundColor='transparent'">
+                                    <i class="ph ph-file-pdf" style="color: #EF4444; font-size: 1.1rem;"></i> ไฟล์ PDF
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="attendanceContentEmpty" class="detail-empty">
+                    <i class="ph ph-users-three"></i>
+                    <h3>ไม่สามารถเช็กชื่อได้</h3>
+                    <p>คุณต้องเพิ่มรายชื่อนักเรียนในแถบ "นักเรียนของฉัน" ก่อน จึงจะสามารถเริ่มเช็กชื่อได้</p>
+                </div>
+
+                <div id="attendanceContent" style="display: none;">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">
+                        <!-- 3 Modes Tabs -->
+                        <div style="display: flex; gap: 0.5rem; overflow-x: auto; width: 100%;">
+                            <button class="modal-tab-btn active" onclick="switchAttendanceMode('manual')"
+                                id="modeBtnManual"
+                                style="padding: 0.5rem 1rem; border: none; background: none; border-bottom: 2px solid var(--primary); color: var(--primary); font-weight: bold; cursor: pointer; white-space: nowrap;">
+                                <i class="ph ph-hand-pointing"></i> เลือกเอง (Manual)
+                            </button>
+                            <button class="modal-tab-btn" onclick="switchAttendanceMode('qr')" id="modeBtnQR"
+                                style="padding: 0.5rem 1rem; border: none; background: none; border-bottom: 2px solid transparent; color: var(--text-sub); font-weight: bold; cursor: pointer; white-space: nowrap;">
+                                <i class="ph ph-qr-code"></i> สแกนรหัส (QR/Barcode)
+                            </button>
+                            <button class="modal-tab-btn" onclick="switchAttendanceMode('avatar')" id="modeBtnAvatar"
+                                style="padding: 0.5rem 1rem; border: none; background: none; border-bottom: 2px solid transparent; color: var(--text-sub); font-weight: bold; cursor: pointer; white-space: nowrap;">
+                                <i class="ph ph-users-three"></i> ลากวาง (Avatar)
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Mode: QR -->
+                    <div id="modeQR"
+                        style="display: none; text-align: center; margin-bottom: 2rem; background: #f8fafc; padding: 2rem; border-radius: 12px; border: 1px dashed #cbd5e1;">
+                        <div id="qrReader"
+                            style="width: 100%; max-width: 400px; margin: 0 auto; display: none; border-radius: 8px; overflow: hidden;">
+                        </div>
+                        <button id="startQrBtn" class="btn btn-primary" onclick="startQRScanner()"
+                            style="margin-top: 1rem;"><i class="ph ph-camera"></i> เปิดกล้องสแกน</button>
+                        <button id="stopQrBtn" class="btn btn-outline" onclick="stopQRScanner()"
+                            style="margin-top: 1rem; display: none;"><i class="ph ph-x"></i> ปิดกล้อง</button>
+                        <p style="margin-top: 1rem; color: var(--text-sub); font-size: 0.9rem;">
+                            เมื่อสแกนรหัสนักเรียนผ่าน สถานะจะเปลี่ยนเป็น "มา" อัตโนมัติในตารางด้านล่าง</p>
+                    </div>
+
+                    <!-- Mode: Avatar -->
+                    <div id="modeAvatar" style="display: none; margin-bottom: 2rem;">
+                        <p style="text-align: center; color: var(--text-sub); margin-bottom: 1rem;"><i
+                                class="ph ph-hand-pointing"></i> ลากป้ายชื่อนักเรียนเข้าห้องเพื่อเช็กชื่อ
+                            (หรือคลิกเพื่อย้ายฝั่ง)</p>
+
+                        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                            <!-- Absent Zone -->
+                            <div
+                                style="flex: 1; min-width: 300px; background: #FEF2F2; border: 2px dashed #FCA5A5; border-radius: 16px; padding: 1.5rem; display: flex; flex-direction: column;">
+                                <h3
+                                    style="color: #DC2626; margin-top: 0; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; font-size: 1.2rem;">
+                                    <i class="ph ph-user-minus"></i> ยังไม่มา (<span id="avatarAbsentCount">0</span>)
+                                </h3>
+                                <div id="avatarListAbsent"
+                                    style="flex: 1; min-height: 200px; display: flex; flex-wrap: wrap; gap: 0.75rem; align-content: flex-start;">
+                                </div>
+                            </div>
+
+                            <!-- Present Zone -->
+                            <div
+                                style="flex: 1; min-width: 300px; background: #F0FDF4; border: 2px dashed #86EFAC; border-radius: 16px; padding: 1.5rem; display: flex; flex-direction: column;">
+                                <h3
+                                    style="color: #16A34A; margin-top: 0; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; font-size: 1.2rem;">
+                                    <i class="ph ph-student"></i> ในห้องเรียน (<span id="avatarPresentCount">0</span>)
+                                </h3>
+                                <div id="avatarListPresent"
+                                    style="flex: 1; min-height: 200px; display: flex; flex-wrap: wrap; gap: 0.75rem; align-content: flex-start;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- The Table -->
+                    <div
+                        style="overflow-x: auto; background-color: var(--card-bg); border-radius: 12px; box-shadow: var(--shadow-sm);">
+                        <table class="students-table"
+                            style="min-width: 800px; width: 100%; border-collapse: collapse; text-align: left; white-space: nowrap; margin: 0;">
+                            <thead>
+                                <tr
+                                    style="border-bottom: 2px solid var(--border-color); color: var(--text-sub); background-color: #F8FAFC;">
+                                    <th style="width: 60px; text-align: center;">เลขที่</th>
+                                    <th style="width: 120px;">รหัสนักเรียน</th>
+                                    <th>ชื่อ-สกุล</th>
+                                    <th style="width: 350px; text-align: center;">สถานะการเข้าเรียน</th>
+                                    <th style="width: 250px;">หมายเหตุ</th>
+                                </tr>
+                            </thead>
+                            <tbody id="attendanceTableBody">
+                                <!-- Rendered by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div
+                        style="margin-top: 2rem; text-align: right; border-top: 1px solid var(--border-color); padding-top: 1.5rem;">
+                        <button class="btn btn-primary" onclick="saveAttendance()"
+                            style="padding: 0.8rem 2rem; font-size: 1.1rem; border: none;" id="saveAttendanceBtn">
+                            <i class="ph ph-floppy-disk"></i> บันทึกการเช็กชื่อ
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feature: Behavior -->
+        <div id="behavior-tab" class="tab-pane">
+            <div class="card" style="padding: 2rem;">
+                <button class="btn btn-secondary" onclick="backToDashboard()"
+                    style="margin-bottom: 1rem; border: none; background: #F1F5F9; color: #475569;"><i
+                        class="ph ph-arrow-left"></i> กลับหน้าแดชบอร์ด</button>
+                <h2
+                    style="margin: 0 0 1.5rem 0; font-size: 1.5rem; display: flex; align-items: center; gap: 0.5rem; color: #1E293B;">
+                    <i class="ph ph-star" style="color: #8B5CF6;"></i> บันทึกพฤติกรรม (คุณลักษณะอันพึงประสงค์)
+                </h2>
+                <div style="display: flex; justify-content: flex-end; margin-bottom: 1rem;">
+                    <button class="btn btn-primary" onclick="openAddBehaviorModal()"
+                        style="background-color: #8B5CF6; border: none;"><i class="ph ph-plus"></i>
+                        บันทึกพฤติกรรม</button>
+                </div>
+                <div style="overflow-x: auto; border: 1px solid var(--border-color); border-radius: 8px;">
+                    <table class="students-table"
+                        style="min-width: 800px; width: 100%; border-collapse: collapse; text-align: left; white-space: nowrap;">
+                        <thead>
+                            <tr style="background-color: #F8FAFC;">
+                                <th style="padding: 1rem; width: 80px; text-align: center;">เลขที่</th>
+                                <th style="padding: 1rem;">ชื่อ-สกุล</th>
+                                <th style="padding: 1rem; width: 150px; text-align: center;">หมวดหมู่</th>
+                                <th style="padding: 1rem; width: 120px; text-align: center;">คะแนนรวม</th>
+                                <th style="padding: 1rem; width: 300px;">บันทึกล่าสุด</th>
+                                <th style="padding: 1rem; width: 180px; text-align: center;">จัดการ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="behaviorTableBody">
+                            <tr>
+                                <td colspan="6" style="text-align: center; padding: 2rem;">กำลังโหลดข้อมูล...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feature: Health -->
+        <div id="health-tab" class="tab-pane">
+            <div class="card" style="padding: 2rem;">
+                <button class="btn btn-secondary" onclick="backToDashboard()"
+                    style="margin-bottom: 1rem; border: none; background: #F1F5F9; color: #475569;"><i
+                        class="ph ph-arrow-left"></i> กลับหน้าแดชบอร์ด</button>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h2
+                        style="margin: 0; font-size: 1.5rem; display: flex; align-items: center; gap: 0.5rem; color: #1E293B;">
+                        <i class="ph ph-heartbeat" style="color: #10B981;"></i> บันทึกสุขภาพ & BMI
+                    </h2>
+                    <button class="btn btn-primary" onclick="saveAllHealthData()"
+                        style="background-color: #10B981; border: none;"><i class="ph ph-floppy-disk"></i>
+                        บันทึกข้อมูลทั้งหมด</button>
+                </div>
+                <div style="overflow-x: auto; border: 1px solid var(--border-color); border-radius: 8px;">
+                    <table class="students-table" style="min-width: 800px; width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background-color: #F8FAFC;">
+                                <th style="padding: 1rem; width: 8%;">เลขที่</th>
+                                <th style="padding: 1rem; width: 25%;">ชื่อ-นามสกุล</th>
+                                <th style="padding: 1rem; width: 15%; text-align: center;">น้ำหนัก (กก.)</th>
+                                <th style="padding: 1rem; width: 15%; text-align: center;">ส่วนสูง (ซม.)</th>
+                                <th style="padding: 1rem; width: 15%; text-align: center;">BMI</th>
+                                <th style="padding: 1rem; width: 22%; text-align: center;">สถานะ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="healthTableBody">
+                            <tr>
+                                <td colspan="6" style="text-align: center; padding: 2rem;">กำลังโหลดข้อมูล...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feature: Care -->
+        <div id="care-tab" class="tab-pane">
+            <div class="card" style="padding: 2rem;">
+                <button class="btn btn-secondary" onclick="backToDashboard()"
+                    style="margin-bottom: 1rem; border: none; background: #F1F5F9; color: #475569;"><i
+                        class="ph ph-arrow-left"></i> กลับหน้าแดชบอร์ด</button>
+                <h2
+                    style="margin: 0 0 1.5rem 0; font-size: 1.5rem; display: flex; align-items: center; gap: 0.5rem; color: #1E293B;">
+                    <i class="ph ph-house-line" style="color: #F59E0B;"></i> ระบบดูแลช่วยเหลือ / เยี่ยมบ้าน
+                </h2>
+                <div style="overflow-x: auto; border: 1px solid var(--border-color); border-radius: 8px;">
+                    <table class="students-table" style="min-width: 800px; width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background-color: #F8FAFC;">
+                                <th style="padding: 1rem; width: 8%;">เลขที่</th>
+                                <th style="padding: 1rem; width: 25%;">ชื่อ-นามสกุล</th>
+                                <th style="padding: 1rem; width: 15%;">เบอร์ผู้ปกครอง</th>
+                                <th style="padding: 1rem; width: 25%; text-align: center;">การติดต่อล่าสุด</th>
+                                <th style="padding: 1rem; width: 15%;">กลุ่มประเมิน</th>
+                                <th style="padding: 1rem; width: 12%; text-align: center;">จัดการ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="careTableBody">
+                            <tr>
+                                <td colspan="6" style="text-align: center; padding: 2rem;">กำลังโหลดข้อมูล...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feature: Seating -->
+        <div id="seating-tab" class="tab-pane">
+            <div class="card" style="padding: 2rem;">
+                <button class="btn btn-secondary" onclick="backToDashboard()"
+                    style="margin-bottom: 1rem; border: none; background: #F1F5F9; color: #475569;"><i
+                        class="ph ph-arrow-left"></i> กลับหน้าแดชบอร์ด</button>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h2
+                        style="margin: 0; font-size: 1.5rem; display: flex; align-items: center; gap: 0.5rem; color: #1E293B;">
+                        <i class="ph ph-map-trifold" style="color: #3B82F6;"></i> ผังที่นั่งเรียน
+                    </h2>
+                    <div style="display: flex; gap: 1rem;">
+                        <button class="btn btn-outline" onclick="window.generateSeatingGrid(6, 6)"
+                            style="border-color: #CBD5E1; color: #475569;"><i class="ph ph-arrows-clockwise"></i>
+                            รีเซ็ตผัง</button>
+                        <button class="btn btn-primary" onclick="window.autoAssignSeats()"
+                            style="background-color: #3B82F6; border: none;"><i class="ph ph-shuffle"></i>
+                            สุ่มที่นั่งอัตโนมัติ</button>
+                    </div>
+                </div>
+                <div style="background-color: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 2rem;">
+                    <div
+                        style="width: 60%; margin: 0 auto 2rem auto; background-color: #475569; color: white; text-align: center; padding: 0.5rem; border-radius: 8px; font-weight: bold; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
+                        กระดานดำ / หน้าชั้นเรียน</div>
+                    <div id="seatingGridContainer" style="display: grid; gap: 1rem;">
+                        <!-- Generated by JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feature: Cleaning -->
+        <div id="cleaning-tab" class="tab-pane">
+            <div class="card" style="padding: 2rem;">
+                <button class="btn btn-secondary" onclick="backToDashboard()"
+                    style="margin-bottom: 1rem; border: none; background: #F1F5F9; color: #475569;"><i
+                        class="ph ph-arrow-left"></i> กลับหน้าแดชบอร์ด</button>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h2
+                        style="margin: 0; font-size: 1.5rem; display: flex; align-items: center; gap: 0.5rem; color: #1E293B;">
+                        <i class="ph ph-broom" style="color: #0EA5E9;"></i> เวรทำความสะอาดประจำวัน
+                    </h2>
+                    <button class="btn btn-primary" onclick="window.autoAssignCleaning()"
+                        style="background-color: #0EA5E9; border: none;"><i class="ph ph-magic-wand"></i>
+                        จัดกลุ่มอัตโนมัติ</button>
+                </div>
+                <div id="cleaningDaysContainer"
+                    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                    <!-- Generated by JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Feature: Fund -->
+        <div id="fund-tab" class="tab-pane">
+            <div class="card" style="padding: 2rem;">
+                <button class="btn btn-secondary" onclick="backToDashboard()"
+                    style="margin-bottom: 1rem; border: none; background: #F1F5F9; color: #475569;"><i
+                        class="ph ph-arrow-left"></i> กลับหน้าแดชบอร์ด</button>
+                <h2
+                    style="margin: 0 0 1.5rem 0; font-size: 1.5rem; display: flex; align-items: center; gap: 0.5rem; color: #1E293B;">
+                    <i class="ph ph-piggy-bank" style="color: #14B8A6;"></i> เงินออมทรัพย์ & กองกลาง
+                </h2>
+                <div style="display: flex; gap: 1rem; margin-bottom: 2rem;">
+                    <div
+                        style="flex: 1; background: #CCFBF1; border-radius: 12px; padding: 1.5rem; display: flex; align-items: center; gap: 1rem;">
+                        <div
+                            style="width: 48px; height: 48px; background: white; color: #0F766E; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                            <i class="ph ph-wallet"></i></div>
+                        <div>
+                            <p style="margin: 0; color: #0F766E; font-size: 0.9rem;">ยอดออมทรัพย์รวม</p>
+                            <h3 style="margin: 0; font-size: 1.5rem; color: #115E59;">฿<span
+                                    id="totalSavings">0.00</span></h3>
+                        </div>
+                    </div>
+                    <div
+                        style="flex: 1; background: #FEF08A; border-radius: 12px; padding: 1.5rem; display: flex; align-items: center; gap: 1rem;">
+                        <div
+                            style="width: 48px; height: 48px; background: white; color: #854D0E; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                            <i class="ph ph-coins"></i></div>
+                        <div>
+                            <p style="margin: 0; color: #854D0E; font-size: 0.9rem;">ยอดกองกลางรวม</p>
+                            <h3 style="margin: 0; font-size: 1.5rem; color: #713F12;">฿<span id="totalFund">0.00</span>
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+                <div style="overflow-x: auto; border: 1px solid var(--border-color); border-radius: 8px;">
+                    <table class="students-table" style="min-width: 800px; width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background-color: #F8FAFC;">
+                                <th style="padding: 1rem; width: 10%;">เลขที่</th>
+                                <th style="padding: 1rem; width: 30%;">ชื่อ-นามสกุล</th>
+                                <th style="padding: 1rem; width: 20%; text-align: right;">เงินออมสะสม</th>
+                                <th style="padding: 1rem; width: 20%; text-align: right;">จ่ายกองกลางแล้ว</th>
+                                <th style="padding: 1rem; width: 20%; text-align: center;">จัดการ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="fundTableBody">
+                            <tr>
+                                <td colspan="5" style="text-align: center; padding: 2rem;">กำลังโหลดข้อมูล...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feature: Academic -->
+        <div id="academic-tab" class="tab-pane">
+            <div class="card" style="padding: 2rem;">
+                <button class="btn btn-secondary" onclick="backToDashboard()"
+                    style="margin-bottom: 1rem; border: none; background: #F1F5F9; color: #475569;"><i
+                        class="ph ph-arrow-left"></i> กลับหน้าแดชบอร์ด</button>
+                <h2
+                    style="margin: 0 0 1.5rem 0; font-size: 1.5rem; display: flex; align-items: center; gap: 0.5rem; color: #1E293B;">
+                    <i class="ph ph-chart-line-up" style="color: #EF4444;"></i> สรุปผลการเรียน (ปพ.6)
+                </h2>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <div style="display: flex; gap: 1rem; align-items: center;">
+                        <select id="academicSemesterSelect" class="form-control" style="width: auto;"
+                            onchange="window.loadAcademicRecords()">
+                            <option value="1/2566">ภาคเรียน 1/2566</option>
+                            <option value="2/2566">ภาคเรียน 2/2566</option>
+                            <option value="1/2567" selected>ภาคเรียน 1/2567</option>
+                        </select>
+                        <select id="academicSubjectSelect" class="form-control" style="width: auto;"
+                            onchange="window.loadAcademicRecords()">
+                            <option value="ภาษาไทย">ภาษาไทย</option>
+                            <option value="คณิตศาสตร์">คณิตศาสตร์</option>
+                            <option value="วิทยาศาสตร์">วิทยาศาสตร์</option>
+                            <option value="สังคมศึกษา">สังคมศึกษา</option>
+                            <option value="สุขศึกษาและพลศึกษา">สุขศึกษาและพลศึกษา</option>
+                            <option value="ศิลปะ">ศิลปะ</option>
+                            <option value="การงานอาชีพ">การงานอาชีพ</option>
+                            <option value="ภาษาต่างประเทศ">ภาษาต่างประเทศ</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" onclick="window.saveAcademicRecords()"
+                        style="background-color: #EF4444; border: none;">
+                        <i class="ph ph-floppy-disk"></i> บันทึกผลการเรียน
+                    </button>
+                </div>
+
+                <div class="table-responsive"
+                    style="overflow-x: auto; border: 1px solid var(--border-color); border-radius: 8px;">
+                    <table class="students-table" style="min-width: 800px; width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background-color: #F8FAFC;">
+                                <th style="padding: 1rem; width: 10%;">เลขที่</th>
+                                <th style="padding: 1rem; width: 30%;">ชื่อ-นามสกุล</th>
+                                <th style="padding: 1rem; width: 25%; text-align: center;">คะแนนที่ได้ (เต็ม 100)</th>
+                                <th style="padding: 1rem; width: 25%; text-align: center;">ระดับผลการเรียน (เกรด)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="academicTableBody">
+                            <tr>
+                                <td colspan="4" style="text-align: center; padding: 2rem;">กำลังโหลดข้อมูล...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feature: Activities -->
+        <div id="activities-tab" class="tab-pane">
+            <div class="card" style="padding: 2rem;">
+                <button class="btn btn-secondary" onclick="backToDashboard()"
+                    style="margin-bottom: 1rem; border: none; background: #F1F5F9; color: #475569;"><i
+                        class="ph ph-arrow-left"></i> กลับหน้าแดชบอร์ด</button>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h2
+                        style="margin: 0; font-size: 1.5rem; display: flex; align-items: center; gap: 0.5rem; color: #1E293B;">
+                        <i class="ph ph-flag-pennant" style="color: #F59E0B;"></i> กิจกรรมโฮมรูม
+                    </h2>
+                    <button class="btn btn-primary" onclick="openAddActivityModal()"
+                        style="background-color: #F59E0B; border: none;">
+                        <i class="ph ph-plus"></i> เพิ่มกิจกรรม
+                    </button>
+                </div>
+
+                <div class="table-responsive"
+                    style="margin-top: 1rem; overflow-x: auto; background-color: var(--card-bg); border-radius: 12px; box-shadow: var(--shadow-sm);">
+                    <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                        <thead>
+                            <tr
+                                style="border-bottom: 2px solid var(--border-color); color: var(--text-sub); background-color: #F8FAFC;">
+                                <th style="padding: 1rem; width: 120px;">วันที่</th>
+                                <th style="padding: 1rem; width: 250px;">ชื่อกิจกรรม</th>
+                                <th style="padding: 1rem;">รายละเอียด</th>
+                                <th style="padding: 1rem; width: 80px; text-align: center;">จัดการ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="activitiesTableBody">
+                            <!-- JS Will Render Here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feature: Morning Talk -->
+        <div id="morning_talk-tab" class="tab-pane">
+            <div class="card" style="padding: 2rem;">
+                <button class="btn btn-secondary" onclick="backToDashboard()"
+                    style="margin-bottom: 1rem; border: none; background: #F1F5F9; color: #475569;"><i
+                        class="ph ph-arrow-left"></i> กลับหน้าแดชบอร์ด</button>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h2
+                        style="margin: 0; font-size: 1.5rem; display: flex; align-items: center; gap: 0.5rem; color: #1E293B;">
+                        <i class="ph ph-coffee" style="color: #D946EF;"></i> โฮมรูม/สนทนายามเช้า
+                    </h2>
+                    <button class="btn btn-primary" onclick="openAddMorningTalkModal()"
+                        style="background-color: #D946EF; border: none;">
+                        <i class="ph ph-plus"></i> เพิ่มหัวข้อพูดคุย
+                    </button>
+                </div>
+
+                <div class="table-responsive"
+                    style="margin-top: 1rem; overflow-x: auto; background-color: var(--card-bg); border-radius: 12px; box-shadow: var(--shadow-sm);">
+                    <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                        <thead>
+                            <tr
+                                style="border-bottom: 2px solid var(--border-color); color: var(--text-sub); background-color: #F8FAFC;">
+                                <th style="padding: 1rem; width: 120px;">วันที่</th>
+                                <th style="padding: 1rem; width: 250px;">หัวข้อสนทนา</th>
+                                <th style="padding: 1rem;">ข้อคิด/หมายเหตุ</th>
+                                <th style="padding: 1rem; width: 80px; text-align: center;">จัดการ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="morningTalkTableBody">
+                            <!-- JS Will Render Here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feature: Teaching Plans -->
+        <div id="teaching_plans-tab" class="tab-pane">
+            <div class="card" style="padding: 2rem;">
+                <button class="btn btn-secondary" onclick="backToDashboard()"
+                    style="margin-bottom: 1rem; border: none; background: #F1F5F9; color: #475569;"><i
+                        class="ph ph-arrow-left"></i> กลับหน้าแดชบอร์ด</button>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h2
+                        style="margin: 0; font-size: 1.5rem; display: flex; align-items: center; gap: 0.5rem; color: #1E293B;">
+                        <i class="ph ph-books" style="color: #64748B;"></i> จัดทำแผนต่าง ๆ
+                    </h2>
+                    <button class="btn btn-primary" onclick="openCreatePlanModal()"
+                        style="background-color: #64748B; border: none;">
+                        <i class="ph ph-plus"></i> สร้างแผนใหม่
+                    </button>
+                </div>
+
+                <div
+                    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+                    <div class="card"
+                        style="padding: 1.5rem; border: 1px solid #E2E8F0; text-align: center; cursor: pointer; transition: all 0.2s;"
+                        onmouseover="this.style.borderColor='#3B82F6'" onmouseout="this.style.borderColor='#E2E8F0'"
+                        onclick="filterPlans('long_term')">
+                        <i class="ph ph-calendar" style="font-size: 2.5rem; color: #3B82F6; margin-bottom: 0.5rem;"></i>
+                        <h4 style="margin: 0 0 0.5rem 0;">แผนการสอนระยะยาว</h4>
+                        <p style="margin: 0; font-size: 0.85rem; color: var(--text-sub);">ภาพรวมการสอนทั้งภาคเรียน</p>
+                    </div>
+                    <div class="card"
+                        style="padding: 1.5rem; border: 1px solid #E2E8F0; text-align: center; cursor: pointer; transition: all 0.2s;"
+                        onmouseover="this.style.borderColor='#10B981'" onmouseout="this.style.borderColor='#E2E8F0'"
+                        onclick="filterPlans('unit')">
+                        <i class="ph ph-book-bookmark"
+                            style="font-size: 2.5rem; color: #10B981; margin-bottom: 0.5rem;"></i>
+                        <h4 style="margin: 0 0 0.5rem 0;">แผนการสอนรายหน่วย</h4>
+                        <p style="margin: 0; font-size: 0.85rem; color: var(--text-sub);">แผนระดับหน่วยการเรียนรู้</p>
+                    </div>
+                    <div class="card"
+                        style="padding: 1.5rem; border: 1px solid #E2E8F0; text-align: center; cursor: pointer; transition: all 0.2s;"
+                        onmouseover="this.style.borderColor='#F59E0B'" onmouseout="this.style.borderColor='#E2E8F0'"
+                        onclick="filterPlans('period')">
+                        <i class="ph ph-clock" style="font-size: 2.5rem; color: #F59E0B; margin-bottom: 0.5rem;"></i>
+                        <h4 style="margin: 0 0 0.5rem 0;">แผนการสอนรายคาบ</h4>
+                        <p style="margin: 0; font-size: 0.85rem; color: var(--text-sub);">แผนระดับคาบเรียน/ชั่วโมง</p>
+                    </div>
+                    <div class="card"
+                        style="padding: 1.5rem; border: 1px solid #E2E8F0; text-align: center; cursor: pointer; transition: all 0.2s;"
+                        onmouseover="this.style.borderColor='#D946EF'" onmouseout="this.style.borderColor='#E2E8F0'"
+                        onclick="filterPlans('homeroom')">
+                        <i class="ph ph-coffee" style="font-size: 2.5rem; color: #D946EF; margin-bottom: 0.5rem;"></i>
+                        <h4 style="margin: 0 0 0.5rem 0;">แผนจัดกิจกรรมโฮมรูม</h4>
+                        <p style="margin: 0; font-size: 0.85rem; color: var(--text-sub);">แผนกิจกรรมยามเช้า</p>
+                    </div>
+                </div>
+
+                <div class="table-responsive"
+                    style="overflow-x: auto; background-color: var(--card-bg); border-radius: 12px; box-shadow: var(--shadow-sm);">
+                    <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                        <thead>
+                            <tr
+                                style="border-bottom: 2px solid var(--border-color); color: var(--text-sub); background-color: #F8FAFC;">
+                                <th style="padding: 1rem; width: 150px;">วันที่สร้าง</th>
+                                <th style="padding: 1rem; width: 150px;">ประเภทแผน</th>
+                                <th style="padding: 1rem;">ชื่อเรื่อง / รายวิชา</th>
+                                <th style="padding: 1rem; width: 120px; text-align: center;">ดาวน์โหลด PDF</th>
+                                <th style="padding: 1rem; width: 80px; text-align: center;">จัดการ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="teachingPlansTableBody">
+                            <!-- JS Will Render Here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Add Student Modal -->
+    <div id="addStudentModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h2><i class="ph ph-user-plus"></i> เพิ่มรายชื่อนักเรียน</h2>
+                <button class="modal-close" onclick="closeAddStudentModal()"><i class="ph ph-x"></i></button>
+            </div>
+
+            <div class="modal-tabs"
+                style="display: flex; gap: 1rem; border-bottom: 1px solid var(--border-color); margin-bottom: 1rem;">
+                <button class="modal-tab-btn active" onclick="switchAddStudentTab('upload')"
+                    style="padding: 0.5rem 1rem; border: none; background: none; border-bottom: 2px solid var(--primary); color: var(--primary); font-weight: bold; cursor: pointer;">อัปโหลดไฟล์
+                    (Excel/CSV)</button>
+                <button class="modal-tab-btn" onclick="switchAddStudentTab('manual')"
+                    style="padding: 0.5rem 1rem; border: none; background: none; border-bottom: 2px solid transparent; color: var(--text-sub); font-weight: bold; cursor: pointer;">กรอกข้อมูลด้วยตนเอง</button>
+            </div>
+
+            <div class="modal-body">
+                <!-- Upload Tab -->
+                <div id="tab-upload" style="display: block;">
+                    <div class="upload-dropzone" id="fileDropzone"
+                        style="border: 2px dashed var(--border-color); border-radius: 8px; padding: 3rem 2rem; text-align: center; cursor: pointer; transition: all 0.2s;">
+                        <div style="display: flex; justify-content: center; gap: 1rem; margin-bottom: 1rem;">
+                            <i class="ph ph-microsoft-excel-logo" style="font-size: 3.5rem; color: #10B981;"></i>
+                            <i class="ph ph-file-csv" style="font-size: 3.5rem; color: #3B82F6;"></i>
+                        </div>
+                        <h3 style="margin: 0 0 0.5rem 0;">ลากไฟล์มาวางที่นี่ หรือคลิกเพื่อเลือกไฟล์</h3>
+                        <p style="color: var(--text-sub); margin: 0; font-size: 0.9rem;">รองรับไฟล์ .xlsx และ .csv</p>
+                        <input type="file" id="studentFileInput"
+                            accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                            style="display: none;">
+                    </div>
+                    <div style="text-align: center; margin-top: 1.5rem;">
+                        <div style="position: relative; display: inline-block; text-align: left;">
+                            <button class="btn btn-secondary" onclick="toggleTemplateMenu(event)"
+                                style="background-color: #f3f4f6; color: #374151; border: 1px solid #d1d5db; padding: 0.6rem 1.2rem; font-size: 0.95rem; display: inline-flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
+                                <i class="ph ph-download-simple"></i> ดาวน์โหลดไฟล์ต้นแบบ (Template) <i
+                                    class="ph ph-caret-down" style="font-size: 0.8rem;"></i>
+                            </button>
+                            <div id="templateDownloadMenu"
+                                style="display: none; position: absolute; left: 50%; transform: translateX(-50%); top: 100%; background: white; border-radius: 8px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); overflow: hidden; z-index: 50; min-width: 180px; border: 1px solid var(--border-color);">
+                                <a href="#" onclick="event.preventDefault(); downloadExcelTemplate('csv')"
+                                    style="display: flex; align-items: center; gap: 0.8rem; padding: 0.8rem 1rem; color: var(--text-color); text-decoration: none; transition: background-color 0.2s;"
+                                    onmouseover="this.style.backgroundColor='#F8FAFC'"
+                                    onmouseout="this.style.backgroundColor='transparent'">
+                                    <i class="ph ph-file-csv" style="color: #3B82F6; font-size: 1.2rem;"></i> ไฟล์ CSV
+                                </a>
+                                <a href="#" onclick="event.preventDefault(); downloadExcelTemplate('xlsx')"
+                                    style="display: flex; align-items: center; gap: 0.8rem; padding: 0.8rem 1rem; color: var(--text-color); text-decoration: none; transition: background-color 0.2s; border-top: 1px solid var(--border-color);"
+                                    onmouseover="this.style.backgroundColor='#F8FAFC'"
+                                    onmouseout="this.style.backgroundColor='transparent'">
+                                    <i class="ph ph-microsoft-excel-logo"
+                                        style="color: #10B981; font-size: 1.2rem;"></i> ไฟล์ Excel (.xlsx)
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Template Preview Area -->
+                    <div
+                        style="background-color: #F8FAFC; border: 1px solid var(--border-color); border-radius: 8px; padding: 1rem; margin-top: 0.5rem;">
+                        <h4
+                            style="margin: 0 0 0.8rem 0; font-size: 0.95rem; color: var(--text-sub); display: flex; align-items: center; gap: 0.4rem;">
+                            <i class="ph ph-table"></i> ตัวอย่างรูปแบบไฟล์ Excel / CSV ที่รองรับ
+                        </h4>
+                        <div style="overflow-x: auto;">
+                            <table
+                                style="width: 100%; border-collapse: collapse; font-size: 0.85rem; background: white; text-align: left; white-space: nowrap;">
+                                <thead>
+                                    <tr style="background-color: #E2E8F0; color: #475569;">
+                                        <th style="padding: 0.5rem; border: 1px solid #CBD5E1;">เลขที่</th>
+                                        <th style="padding: 0.5rem; border: 1px solid #CBD5E1;">รหัสประจำตัว</th>
+                                        <th style="padding: 0.5rem; border: 1px solid #CBD5E1;">คำนำหน้า</th>
+                                        <th style="padding: 0.5rem; border: 1px solid #CBD5E1;">ชื่อ</th>
+                                        <th style="padding: 0.5rem; border: 1px solid #CBD5E1;">นามสกุล</th>
+                                        <th style="padding: 0.5rem; border: 1px solid #CBD5E1;">เบอร์โทรศัพท์นักเรียน
+                                        </th>
+                                        <th style="padding: 0.5rem; border: 1px solid #CBD5E1;">เบอร์โทรศัพท์ผู้ปกครอง
+                                        </th>
+                                        <th style="padding: 0.5rem; border: 1px solid #CBD5E1;">หมายเหตุ</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style="padding: 0.5rem; border: 1px solid #CBD5E1;">1</td>
+                                        <td style="padding: 0.5rem; border: 1px solid #CBD5E1;">65001</td>
+                                        <td style="padding: 0.5rem; border: 1px solid #CBD5E1;">ด.ช.</td>
+                                        <td style="padding: 0.5rem; border: 1px solid #CBD5E1;">สมชาย</td>
+                                        <td style="padding: 0.5rem; border: 1px solid #CBD5E1;">เรียนดี</td>
+                                        <td style="padding: 0.5rem; border: 1px solid #CBD5E1;">0812345678</td>
+                                        <td style="padding: 0.5rem; border: 1px solid #CBD5E1;">0898765432</td>
+                                        <td style="padding: 0.5rem; border: 1px solid #CBD5E1;">แพ้อาหารทะเล</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div id="uploadStatus" style="margin-top: 1rem; text-align: center; display: none;">
+                        <p id="uploadStatusText" style="margin: 0; font-weight: bold;"></p>
+                    </div>
+                </div>
+
+                <!-- Manual Tab -->
+                <div id="tab-manual" style="display: none;">
+                    <form id="manualStudentForm">
+                        <div class="form-row" style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                            <div class="form-group" style="flex: 1;">
+                                <label>เลขที่ *</label>
+                                <input type="number" id="m_roll_number" class="form-control" required min="1"
+                                    placeholder="เช่น 1">
+                            </div>
+                            <div class="form-group" style="flex: 2;">
+                                <label>รหัสประจำตัวนักเรียน</label>
+                                <input type="text" id="m_student_id" class="form-control" placeholder="เช่น 65001">
+                            </div>
+                        </div>
+                        <div class="form-row" style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                            <div class="form-group" style="flex: 1;">
+                                <label>คำนำหน้า *</label>
+                                <select id="m_title" class="form-control" required>
+                                    <option value="ด.ช.">ด.ช.</option>
+                                    <option value="ด.ญ.">ด.ญ.</option>
+                                    <option value="นาย">นาย</option>
+                                    <option value="นางสาว">นางสาว</option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="flex: 2;">
+                                <label>ชื่อ *</label>
+                                <input type="text" id="m_first_name" class="form-control" required
+                                    placeholder="เช่น สมชาย">
+                            </div>
+                            <div class="form-group" style="flex: 2;">
+                                <label>นามสกุล *</label>
+                                <input type="text" id="m_last_name" class="form-control" required
+                                    placeholder="เช่น เรียนดี">
+                            </div>
+                        </div>
+                        <div class="form-row" style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                            <div class="form-group" style="flex: 1;">
+                                <label>เบอร์โทรศัพท์นักเรียน</label>
+                                <input type="text" id="m_phone" class="form-control" placeholder="เช่น 0812345678">
+                            </div>
+                            <div class="form-group" style="flex: 1;">
+                                <label>เบอร์โทรศัพท์ผู้ปกครอง</label>
+                                <input type="text" id="m_parent_phone" class="form-control"
+                                    placeholder="เช่น 0898765432">
+                            </div>
+                        </div>
+                        <div class="form-row" style="margin-bottom: 1rem;">
+                            <div class="form-group">
+                                <label>หมายเหตุ (ถ้ามี)</label>
+                                <input type="text" id="m_remark" class="form-control"
+                                    placeholder="เช่น แพ้อาหารทะเล, มีโรคประจำตัว">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary"
+                            style="width: 100%; justify-content: center; background-color: #10B981; border: none; margin-top: 1rem;">
+                            <i class="ph ph-floppy-disk"></i> บันทึกข้อมูล
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Student Modal -->
+    <div id="editStudentModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h2><i class="ph ph-pencil-simple"></i> แก้ไขข้อมูลนักเรียน</h2>
+                <button class="modal-close" onclick="closeEditStudentModal()"><i class="ph ph-x"></i></button>
+            </div>
+
+            <div class="modal-body">
+                <form id="editStudentForm">
+                    <input type="hidden" id="e_student_uuid">
+                    <div class="form-row" style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                        <div class="form-group" style="flex: 1;">
+                            <label>เลขที่ *</label>
+                            <input type="number" id="e_roll_number" class="form-control" required min="1"
+                                placeholder="เช่น 1">
+                        </div>
+                        <div class="form-group" style="flex: 2;">
+                            <label>รหัสประจำตัวนักเรียน</label>
+                            <input type="text" id="e_student_id" class="form-control" placeholder="เช่น 65001">
+                        </div>
+                    </div>
+                    <div class="form-row" style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                        <div class="form-group" style="flex: 1;">
+                            <label>คำนำหน้า *</label>
+                            <select id="e_title" class="form-control" required>
+                                <option value="ด.ช.">ด.ช.</option>
+                                <option value="ด.ญ.">ด.ญ.</option>
+                                <option value="นาย">นาย</option>
+                                <option value="นางสาว">นางสาว</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="flex: 2;">
+                            <label>ชื่อ *</label>
+                            <input type="text" id="e_first_name" class="form-control" required placeholder="เช่น สมชาย">
+                        </div>
+                        <div class="form-group" style="flex: 2;">
+                            <label>นามสกุล *</label>
+                            <input type="text" id="e_last_name" class="form-control" required
+                                placeholder="เช่น เรียนดี">
+                        </div>
+                    </div>
+                    <div class="form-row" style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                        <div class="form-group" style="flex: 1;">
+                            <label>เบอร์โทรศัพท์นักเรียน</label>
+                            <input type="text" id="e_phone" class="form-control" placeholder="เช่น 0812345678">
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label>เบอร์โทรศัพท์ผู้ปกครอง</label>
+                            <input type="text" id="e_parent_phone" class="form-control" placeholder="เช่น 0898765432">
+                        </div>
+                    </div>
+                    <div class="form-row" style="margin-bottom: 1rem;">
+                        <div class="form-group">
+                            <label>หมายเหตุ (ถ้ามี)</label>
+                            <input type="text" id="e_remark" class="form-control"
+                                placeholder="เช่น แพ้อาหารทะเล, มีโรคประจำตัว">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary"
+                        style="width: 100%; justify-content: center; background-color: #3B82F6; border: none; margin-top: 1rem;">
+                        <i class="ph ph-floppy-disk"></i> บันทึกการแก้ไข
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteStudentModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content" style="max-width: 400px; text-align: center; padding: 2rem;">
+            <div
+                style="width: 64px; height: 64px; border-radius: 50%; background-color: #FEE2E2; color: #EF4444; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 1.5rem auto;">
+                <i class="ph ph-warning"></i>
+            </div>
+            <h2 style="margin-bottom: 0.5rem;">ยืนยันการลบข้อมูล?</h2>
+            <p style="color: var(--text-sub); margin-bottom: 1.5rem; font-size: 0.95rem;">
+                คุณแน่ใจหรือไม่ว่าต้องการลบรายชื่อนักเรียนคนนี้?<br>ข้อมูลนี้จะไม่สามารถกู้คืนได้
+            </p>
+            <input type="hidden" id="d_student_uuid">
+            <div style="display: flex; gap: 1rem; justify-content: center;">
+                <button class="btn btn-secondary" onclick="closeDeleteStudentModal()"
+                    style="flex: 1; justify-content: center; background-color: #F1F5F9; border: none; color: #475569;">
+                    ยกเลิก
+                </button>
+                <button class="btn btn-primary" onclick="confirmDeleteStudent()"
+                    style="flex: 1; justify-content: center; background-color: #EF4444; border: none; box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.2), 0 2px 4px -1px rgba(239, 68, 68, 0.06);">
+                    ยืนยันการลบ
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Behavior History Modal -->
+    <div id="behaviorHistoryModal" class="modal-overlay" style="display: none; z-index: 1040;">
+        <div class="modal-content"
+            style="max-width: 600px; width: 90%; max-height: 90vh; display: flex; flex-direction: column;">
+            <div class="modal-header">
+                <h2><i class="ph ph-clock-counter-clockwise"></i> ประวัติ: <span id="bh_student_name"
+                        style="color: #8B5CF6;"></span></h2>
+                <button class="modal-close"
+                    onclick="document.getElementById('behaviorHistoryModal').style.display='none'"><i
+                        class="ph ph-x"></i></button>
+            </div>
+            <div class="modal-body" style="overflow-y: auto; flex: 1; padding: 1rem;">
+                <table class="table" style="margin-bottom: 0;">
+                    <thead>
+                        <tr>
+                            <th style="width: 100px;">วันที่</th>
+                            <th>หมวดหมู่</th>
+                            <th style="width: 80px; text-align: center;">คะแนน</th>
+                            <th>รายละเอียด</th>
+                            <th style="width: 60px; text-align: center;">ลบ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="behaviorHistoryTableBody">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Behavior Modal -->
+    <div id="addBehaviorModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2><i class="ph ph-star"></i> บันทึกพฤติกรรม</h2>
+                <button class="modal-close"
+                    onclick="document.getElementById('addBehaviorModal').style.display='none'"><i
+                        class="ph ph-x"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="behaviorForm">
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label>นักเรียน</label>
+                        <select id="b_student_id" class="form-control" required>
+                            <!-- Options injected by JS -->
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label>หมวดหมู่</label>
+                        <select id="b_category" class="form-control" required>
+                            <option value="รักชาติ ศาสน์ กษัตริย์">รักชาติ ศาสนา กษัตริย์</option>
+                            <option value="ซื่อสัตย์สุจริต">ซื่อสัตย์สุจริต</option>
+                            <option value="มีวินัย">มีวินัย</option>
+                            <option value="ใฝ่เรียนรู้">ใฝ่เรียนรู้</option>
+                            <option value="อยู่อย่างพอเพียง">อยู่อย่างพอเพียง</option>
+                            <option value="มุ่งมั่นในการทำงาน">มุ่งมั่นในการทำงาน</option>
+                            <option value="รักความเป็นไทย">รักความเป็นไทย</option>
+                            <option value="มีจิตสาธารณะ">มีจิตสาธารณะ</option>
+                            <option value="อื่นๆ">อื่นๆ</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label>ประเภท</label>
+                        <div style="display: flex; gap: 1rem;">
+                            <label><input type="radio" name="b_type" value="positive" checked> เชิงบวก (+)</label>
+                            <label><input type="radio" name="b_type" value="negative"> เชิงลบ (-)</label>
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label>คะแนน</label>
+                        <input type="number" id="b_points" class="form-control" min="1" value="1" required>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label>รายละเอียด</label>
+                        <input type="text" id="b_desc" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary"
+                        style="width: 100%; justify-content: center; background-color: #8B5CF6; border: none;">บันทึกพฤติกรรม</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Care Modal -->
+    <div id="addCareModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2><i class="ph ph-house-line"></i> บันทึกการติดต่อ/เยี่ยมบ้าน</h2>
+                <button class="modal-close" onclick="document.getElementById('addCareModal').style.display='none'"><i
+                        class="ph ph-x"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="careForm">
+                    <input type="hidden" id="c_student_id">
+                    <div style="margin-bottom: 1rem;">
+                        <strong>นักเรียน: </strong> <span id="c_student_name"></span>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label>ช่องทางการติดต่อ</label>
+                        <select id="c_type" class="form-control" required>
+                            <option value="home_visit">เยี่ยมบ้าน</option>
+                            <option value="phone">โทรศัพท์</option>
+                            <option value="line">LINE</option>
+                            <option value="parent_meeting">ประชุมผู้ปกครอง</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label>กลุ่มประเมิน</label>
+                        <select id="c_status" class="form-control" required>
+                            <option value="normal">กลุ่มปกติ</option>
+                            <option value="risk">กลุ่มเสี่ยง</option>
+                            <option value="problem">กลุ่มมีปัญหา</option>
+                            <option value="special">กลุ่มพิเศษ</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label>บันทึกเพิ่มเติม</label>
+                        <textarea id="c_note" class="form-control" rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary"
+                        style="width: 100%; justify-content: center; background-color: #F59E0B; border: none;">บันทึกข้อมูล</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Activity Modal -->
+    <div id="addActivityModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2><i class="ph ph-flag-pennant"></i> เพิ่มกิจกรรมโฮมรูม</h2>
+                <button class="modal-close"
+                    onclick="document.getElementById('addActivityModal').style.display='none'"><i
+                        class="ph ph-x"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="activityForm">
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label>วันที่กิจกรรม *</label>
+                        <input type="date" id="act_date" class="form-control" required>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label>ชื่อกิจกรรม *</label>
+                        <input type="text" id="act_name" class="form-control" required
+                            placeholder="เช่น กีฬาสี, ทัศนศึกษา">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label>รายละเอียด / หมายเหตุ</label>
+                        <textarea id="act_desc" class="form-control" rows="4"
+                            placeholder="รายละเอียดกิจกรรม ผลที่ได้รับ ฯลฯ"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary"
+                        style="width: 100%; justify-content: center; background-color: #F59E0B; border: none;">
+                        <i class="ph ph-floppy-disk"></i> บันทึกกิจกรรม
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Morning Talk Modal -->
+    <div id="addMorningTalkModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2><i class="ph ph-coffee"></i> เพิ่มหัวข้อพูดคุยยามเช้า</h2>
+                <button class="modal-close"
+                    onclick="document.getElementById('addMorningTalkModal').style.display='none'"><i
+                        class="ph ph-x"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="morningTalkForm">
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label>วันที่ *</label>
+                        <input type="date" id="mt_date" class="form-control" required>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label>หัวข้อสนทนา *</label>
+                        <input type="text" id="mt_topic" class="form-control" required
+                            placeholder="เช่น การดูแลสุขภาพ, ระเบียบวินัย">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label>ข้อคิด / หมายเหตุ</label>
+                        <textarea id="mt_note" class="form-control" rows="4"
+                            placeholder="ข้อคิดที่ได้ หรือการตอบสนองของนักเรียน"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary"
+                        style="width: 100%; justify-content: center; background-color: #D946EF; border: none;">
+                        <i class="ph ph-floppy-disk"></i> บันทึกข้อมูล
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Plan Modal -->
+    <div id="createPlanModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h2><i class="ph ph-books"></i> จัดทำแผนการสอน</h2>
+                <button class="modal-close" onclick="document.getElementById('createPlanModal').style.display='none'"><i
+                        class="ph ph-x"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="teachingPlanForm">
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label>ประเภทแผน *</label>
+                        <select id="tp_type" class="form-control" required onchange="window.updatePlanFields()">
+                            <option value="long_term">แผนการสอนระยะยาว</option>
+                            <option value="unit">แผนการสอนรายหน่วย</option>
+                            <option value="period">แผนการสอนรายคาบ</option>
+                            <option value="homeroom">แผนจัดกิจกรรมโฮมรูม</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label>ชื่อเรื่อง / รายวิชา *</label>
+                        <input type="text" id="tp_title" class="form-control" required
+                            placeholder="ระบุชื่อวิชา หรือชื่อหน่วยการเรียนรู้">
+                    </div>
+
+                    <div id="tp_dynamic_fields"
+                        style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+                        <!-- JS will inject dynamic inputs here based on plan type -->
+                    </div>
+
+                    <button type="submit" class="btn btn-primary"
+                        style="width: 100%; justify-content: center; background-color: #64748B; border: none;">
+                        <i class="ph ph-floppy-disk"></i> บันทึกและสร้างเอกสาร
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Libraries -->
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/th.js"></script>
+
+    <!-- Logic -->
+    <script src="../js/supabase.js"></script>
+    <script src="../js/guard.js"></script>
+    <script src="../js/class_detail_common.js"></script>
+    <script src="../js/students.js"></script>
+    <script src="../js/attendance.js"></script>
+    <script src="../js/homeroom_features.js"></script>
+</body>
+
+</html>

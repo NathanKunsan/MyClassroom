@@ -1,0 +1,303 @@
+/* css/settings.css */
+.settings-page {
+    background-color: var(--bg-color);
+    font-family: 'Kanit', sans-serif;
+    color: var(--text-main);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0;
+    margin: 0;
+    min-height: 100vh;
+}
+
+.settings-sticky-nav {
+    position: fixed;
+    top: -100px; /* Hidden above viewport */
+    left: 0;
+    width: 100%;
+    background-color: #F8D38D;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+    transition: top 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.settings-sticky-nav.show {
+    top: 0;
+}
+
+.settings-sticky-nav .nav-content {
+    width: 100%;
+    max-width: 1000px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+}
+
+.settings-title-small {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.btn-save-small {
+    padding: 0.5rem 1.5rem;
+    font-size: 1rem;
+}
+
+.settings-header {
+    width: 100%;
+    max-width: 1000px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 3rem 2rem 2rem 2rem;
+}
+
+.back-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    color: var(--text-main);
+    font-weight: 500;
+    font-size: 1.1rem;
+    transition: transform 0.2s ease;
+}
+
+.back-btn:hover {
+    transform: translateX(-5px);
+}
+
+.settings-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.btn-save {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 0.6rem 2rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    transition: background-color 0.2s, transform 0.2s;
+    font-family: inherit;
+}
+
+.btn-save:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-2px);
+}
+
+.settings-main {
+    width: 100%;
+    max-width: 1000px;
+    padding: 0 2rem 4rem 2rem;
+}
+
+.settings-card {
+    background-color: white;
+    border-radius: 20px;
+    padding: 3rem;
+    box-shadow: var(--shadow-md);
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+}
+
+.card-header i {
+    font-size: 2.2rem;
+    color: var(--text-main);
+}
+
+.card-header h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.card-content-flex {
+    display: flex;
+    gap: 4rem;
+    align-items: flex-start;
+}
+
+.form-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1.8rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-row {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.form-row .form-group {
+    flex: 1;
+}
+
+.form-group label {
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.required {
+    color: #EF4444; /* Red */
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    background-color: #F8FAFC;
+    font-family: inherit;
+    font-size: 1rem;
+    color: var(--text-main);
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(165, 116, 183, 0.1);
+}
+
+.form-group input:disabled {
+    color: var(--text-sub);
+    background-color: #F1F5F9;
+    cursor: not-allowed;
+}
+
+.form-group input::placeholder {
+    color: #94A3B8;
+}
+
+.profile-image-section {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-right: 2rem;
+    margin-top: -3.5rem; /* ขยับขึ้นไปใต้หัวข้อ ข้อมูลส่วนตัว */
+}
+
+.profile-image-container {
+    position: relative;
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    overflow: hidden;
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    border: 4px solid white;
+}
+
+.profile-image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.profile-image-container:hover .profile-image-overlay {
+    opacity: 1;
+}
+
+.profile-image-overlay span {
+    color: white;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+@media (max-width: 768px) {
+    .settings-header {
+        padding: 1.5rem 1.5rem 1rem 1.5rem;
+    }
+    .settings-header-wrapper.scrolled .settings-header {
+        padding: 0.75rem 1.25rem;
+    }
+
+    .settings-title {
+        font-size: 1.5rem;
+    }
+
+    .btn-save {
+        padding: 0.5rem 1.25rem;
+        font-size: 1rem;
+    }
+
+    .settings-main {
+        padding: 0 1rem 2rem 1rem;
+    }
+
+    .settings-card {
+        padding: 1.5rem;
+    }
+
+    .card-header {
+        margin-bottom: 1.5rem;
+    }
+
+    .card-header i {
+        font-size: 1.8rem;
+    }
+
+    .card-header h2 {
+        font-size: 1.4rem;
+    }
+
+    .card-content-flex {
+        flex-direction: column-reverse;
+        gap: 2rem;
+        align-items: center; /* Center the profile image */
+    }
+    
+    .form-section {
+        width: 100%;
+    }
+    
+    .profile-image-section {
+        padding-right: 0;
+        margin-bottom: 1rem;
+        margin-top: 0; /* Reset negative margin on mobile */
+    }
+    
+
+    .form-row {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+}
