@@ -13,6 +13,8 @@
     <script src="../js/loader.js"></script>
     <!-- Cropper.js CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+    <!-- intl-tel-input CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.2.1/css/intlTelInput.css">
 </head>
 
 <body class="settings-page">
@@ -45,7 +47,7 @@
                 <div class="form-section">
                     <div class="form-group">
                         <label>ชื่อ-นามสกุล</label>
-                        <input type="text" id="settingsFullName" placeholder="[usernames]">
+                        <input type="text" id="settingsFullName" placeholder="เช่น นาธาร คุณสาร">
                     </div>
                     <div class="form-row">
                         <div class="form-group">
@@ -54,7 +56,7 @@
                         </div>
                         <div class="form-group">
                             <label>เบอร์โทรศัพท์ <span class="required">*จำเป็น*</span></label>
-                            <input type="tel" id="settingsPhone" placeholder="[เบอร์โทรฯ]">
+                            <input type="tel" id="settingsPhone" placeholder="เช่น 083XXXXXXX">
                         </div>
                     </div>
                     <div class="form-group">
@@ -120,6 +122,8 @@
     <!-- Cropper.js JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
     <script src="../js/profile.js?v=2"></script>
+    <!-- intl-tel-input JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.2.1/js/intlTelInput.min.js"></script>
     <script src="../js/settings.js"></script>
 
     <!-- Hidden File Input for Profile Image -->
