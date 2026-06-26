@@ -36,6 +36,30 @@ async function loadClassrooms() {
         if (error) throw error;
         
         classrooms = data || [];
+
+        // Fetch students and attendance stats
+        if (classrooms.length > 0) {
+            const classIds = classrooms.map(c => c.id);
+            const [{ data: studentsData }, { data: attendanceData }] = await Promise.all([
+                supabaseClient.from('students').select('classroom_id').in('classroom_id', classIds),
+                supabaseClient.from('attendance').select('class_id, date').in('class_id', classIds).order('date', { ascending: false })
+            ]);
+
+            classrooms.forEach(cls => {
+                cls.student_count = studentsData ? studentsData.filter(s => s.classroom_id === cls.id).length : 0;
+                const latest = attendanceData ? attendanceData.find(a => a.class_id === cls.id) : null;
+                cls.latest_attendance = latest ? latest.date : null;
+            });
+
+            const statTotalStudents = document.getElementById('statTotalStudents');
+            if (statTotalStudents) {
+                statTotalStudents.textContent = studentsData ? studentsData.length : '0';
+            }
+        } else {
+            const statTotalStudents = document.getElementById('statTotalStudents');
+            if (statTotalStudents) statTotalStudents.textContent = '0';
+        }
+
         renderClassrooms();
     } catch (e) {
         console.error('Failed to load classrooms:', e);
@@ -59,7 +83,7 @@ function renderClassrooms() {
 
     // Update stats
     if(statAllClasses) statAllClasses.textContent = classrooms.length;
-    if(statTotalStudents) statTotalStudents.textContent = '0'; // Placeholder for total students
+    // statTotalStudents is updated in loadClassrooms
     if(statPendingHomework) statPendingHomework.textContent = '0'; // Placeholder for pending homework
 
     if (classrooms.length === 0) {
@@ -110,10 +134,10 @@ function createClassCardHTML(cls) {
             </div>
             <div class="class-card-body">
                 <div class="class-card-stat">
-                    <i class="ph ph-users"></i> นักเรียน 0 คน
+                    <i class="ph ph-users"></i> นักเรียน ${cls.student_count || 0} คน
                 </div>
                 <div class="class-card-stat" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                    <span><i class="ph ph-calendar-check"></i> เช็กชื่อล่าสุด: ยังไม่มี</span>
+                    <span><i class="ph ph-calendar-check"></i> เช็กชื่อล่าสุด: ${cls.latest_attendance ? new Date(cls.latest_attendance).toLocaleDateString('th-TH', {day:'numeric', month:'short', year:'numeric'}) : 'ยังไม่มี'}</span>
                     <button onclick="event.stopPropagation(); window.location.href='${targetPage}?id=${cls.id}&tab=attendance-tab'" style="background: var(--primary); color: white; border: none; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
                         ไปเช็กชื่อ <i class="ph ph-arrow-right"></i>
                     </button>
