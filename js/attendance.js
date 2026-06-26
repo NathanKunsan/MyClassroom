@@ -799,7 +799,7 @@ function exportAttendance(type) {
                 @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap');
                 .pdf-wrapper {
                     font-family: 'TH Sarabun PSK', 'THSarabunPSK', 'Sarabun', sans-serif;
-                    font-size: 16px;
+                    font-size: 16pt;
                     background-color: white;
                     color: #000;
                     width: 800px;
@@ -809,7 +809,7 @@ function exportAttendance(type) {
                 .pdf-table {
                     width: 100%;
                     border-collapse: collapse;
-                    font-size: 16px;
+                    font-size: 16pt;
                     margin-bottom: 40px;
                 }
                 .pdf-table th, .pdf-table td {
@@ -825,9 +825,9 @@ function exportAttendance(type) {
             </style>
             <div class="pdf-wrapper">
                 <div style="text-align: center; margin-bottom: 25px;">
-                    <h1 style="font-size: 24px; font-weight: bold; margin: 0 0 10px 0;">แบบบันทึกเวลาเรียน</h1>
-                    <p style="font-size: 18px; margin: 0 0 5px 0;">วิชา: ${classNamePart} ชั้น: ${gradeRoomPart}</p>
-                    <p style="font-size: 18px; margin: 0;">ประจำวันที่: ${formattedDate}</p>
+                    <h1 style="font-size: 24pt; font-weight: bold; margin: 0 0 10px 0;">แบบบันทึกเวลาเรียน</h1>
+                    <p style="font-size: 16pt; margin: 0 0 5px 0;">วิชา: ${classNamePart} ชั้น: ${gradeRoomPart}</p>
+                    <p style="font-size: 16pt; margin: 0;">ประจำวันที่: ${formattedDate}</p>
                 </div>
                 <table class="pdf-table">
                     <thead>
