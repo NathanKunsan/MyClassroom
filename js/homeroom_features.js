@@ -24,7 +24,7 @@ window.loadFeatureData = async function() {
             .from('behavior_logs')
             .select('*')
             .eq('class_id', classId)
-            .order('date', { ascending: false });
+            .order('created_at', { ascending: false });
         if (bData) behaviorLogs = bData;
 
         // Load Health
@@ -136,11 +136,15 @@ window.renderBehaviorTable = function() {
 
     existingStudents.forEach((student, index) => {
         let studentLogs = behaviorLogs.filter(log => log.student_id === student.id);
+        
+        // Ensure studentLogs are sorted by created_at to always get the real latest record
+        studentLogs.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
         if (currentBehaviorFilter !== 'all') {
             studentLogs = studentLogs.filter(log => log.category === currentBehaviorFilter);
         }
 
-        let totalScore = 100; // Base score
+        let totalScore = 0; // Base score
         let lastLogText = '-';
         
         if (studentLogs.length > 0) {
@@ -155,7 +159,10 @@ window.renderBehaviorTable = function() {
             });
         }
 
-        const scoreColor = totalScore >= 100 ? '#10B981' : (totalScore >= 80 ? '#F59E0B' : '#EF4444');
+        let scoreColor = '#475569';
+        if (totalScore > 0) scoreColor = '#10B981';
+        else if (totalScore < 0) scoreColor = '#EF4444';
+
         const rowBgColor = index % 2 === 0 ? 'white' : '#F8FAFC';
 
         const tr = document.createElement('tr');
@@ -309,6 +316,287 @@ window.deleteBehaviorLog = async function(logId) {
 };
 
 // ==========================================
+// FEATURE: Behavior Download
+// ==========================================
+window.toggleBehaviorDownloadMenu = function(e) {
+    if (e) e.stopPropagation();
+    const menu = document.getElementById('behaviorDownloadMenu');
+    if (menu) {
+        menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+    }
+};
+
+document.addEventListener('click', function(e) {
+    const menu = document.getElementById('behaviorDownloadMenu');
+    if (menu && !e.target.closest('#behaviorDownloadMenu') && !e.target.closest('button[onclick="toggleBehaviorDownloadMenu(event)"]')) {
+        menu.style.display = 'none';
+    }
+});
+
+window.exportBehavior = function(type) {
+    const menu = document.getElementById('behaviorDownloadMenu');
+    if (menu) menu.style.display = 'none';
+
+    if (typeof existingStudents === 'undefined' || existingStudents.length === 0) {
+        window.showAppAlert('ไม่มีข้อมูลนักเรียนให้ดาวน์โหลด', 'warning');
+        return;
+    }
+
+    // Sort students by roll number
+    const sortedStudents = [...existingStudents].sort((a, b) => parseInt(a.roll_number || 999) - parseInt(b.roll_number || 999));
+
+    const categories = [
+        'รักชาติ ศาสนา พระมหากษัตริย์',
+        'ซื่อสัตย์สุจริต',
+        'มีวินัย',
+        'ใฝ่เรียนรู้',
+        'อยู่อย่างพอเพียง',
+        'มุ่งมั่นในการทำงาน',
+        'รักความเป็นไทย',
+        'มีจิตสาธารณะ'
+    ];
+
+    const displayCategories = [
+        'รักชาติ ศาสน์ กษัตริย์',
+        'ซื่อสัตย์สุจริต',
+        'มีวินัย',
+        'ใฝ่เรียนรู้',
+        'อยู่อย่างพอเพียง',
+        'มุ่งมั่นในการทำงาน',
+        'รักความเป็นไทย',
+        'มีจิตสาธารณะ'
+    ];
+
+    const headers = ['เลขที่', 'รหัสนักเรียน', 'ชื่อ-นามสกุล', ...displayCategories, 'คะแนนรวม'];
+
+    const data = sortedStudents.map(student => {
+        const studentLogs = behaviorLogs.filter(log => log.student_id === student.id);
+        
+        let row = [
+            student.roll_number || '',
+            student.student_id || '',
+            `${student.title}${student.first_name} ${student.last_name}`
+        ];
+
+        let totalScore = 0;
+        
+        categories.forEach(cat => {
+            const catLogs = studentLogs.filter(log => log.category === cat);
+            let netPoints = 0;
+            catLogs.forEach(log => {
+                if (log.type === 'positive') netPoints += log.points;
+                else netPoints -= log.points;
+            });
+            totalScore += netPoints;
+            row.push(netPoints > 0 ? `+${netPoints}` : netPoints === 0 ? '0' : `${netPoints}`);
+        });
+
+        row.push(totalScore.toString());
+        return row;
+    });
+
+    let classNamePart = 'รายวิชา';
+    let gradeRoomPart = '';
+    
+    if (window.currentClassData) {
+        const cls = window.currentClassData;
+        classNamePart = cls.type === 'homeroom' ? 'ห้องประจำชั้น' : (cls.subject_name || 'รายวิชา');
+        gradeRoomPart = `${cls.grade_level || ''}/${cls.room_number || ''}`;
+    }
+
+    const formattedDate = new Date().toLocaleDateString('th-TH', { day: 'numeric', month: 'long', year: 'numeric' });
+    const fileName = `รายงานพฤติกรรม_${classNamePart}_${gradeRoomPart}`.replace(/\s+/g, '_').replace(/\//g, '-');
+
+    if (type === 'csv') {
+        let csvContent = '\uFEFF' + headers.join(',') + '\n';
+        data.forEach(row => {
+            csvContent += row.map(cell => `"${cell}"`).join(',') + '\n';
+        });
+        
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.setAttribute('download', `${fileName}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+    } else if (type === 'xlsx') {
+        if (typeof XLSX === 'undefined') {
+            window.showAppAlert('ไม่พบไลบรารีสำหรับสร้างไฟล์ Excel กรุณารีเฟรชหน้าเว็บ');
+            return;
+        }
+        const ws = XLSX.utils.aoa_to_sheet([headers, ...data]);
+        
+        const range = XLSX.utils.decode_range(ws['!ref']);
+        for (let R = range.s.r; R <= range.e.r; ++R) {
+            for (let C = range.s.c; C <= range.e.c; ++C) {
+                const cellRef = XLSX.utils.encode_cell({c: C, r: R});
+                if (!ws[cellRef]) continue;
+                
+                ws[cellRef].s = { font: { name: "THSarabunPSK", sz: 16 } };
+                if (R === 0) {
+                    ws[cellRef].s.font.bold = true;
+                    ws[cellRef].s.fill = { fgColor: { rgb: "F1F5F9" } };
+                }
+            }
+        }
+        
+        ws['!cols'] = [{wch: 5}, {wch: 15}, {wch: 30}, {wch: 10}, {wch: 10}, {wch: 10}, {wch: 10}, {wch: 12}, {wch: 12}, {wch: 10}, {wch: 10}, {wch: 10}];
+        
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "พฤติกรรม");
+        XLSX.writeFile(wb, `${fileName}.xlsx`);
+        
+    } else if (type === 'pdf') {
+        if (typeof html2pdf === 'undefined') {
+            window.showAppAlert('ไม่พบไลบรารีสำหรับสร้าง PDF กรุณารีเฟรชหน้าเว็บแล้วลองใหม่');
+            return;
+        }
+        
+        const previewOverlay = document.createElement('div');
+        previewOverlay.style.position = 'absolute';
+        previewOverlay.style.top = '0';
+        previewOverlay.style.left = '0';
+        previewOverlay.style.minWidth = '100vw';
+        previewOverlay.style.minHeight = '100vh';
+        previewOverlay.style.backgroundColor = '#e2e8f0';
+        previewOverlay.style.zIndex = '999999';
+        previewOverlay.style.display = 'block'; 
+        previewOverlay.style.padding = '80px 20px 40px 20px';
+        previewOverlay.style.textAlign = 'center';
+        
+        let html = `
+            <style>
+                @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap');
+                .pdf-wrapper {
+                    font-family: 'TH Sarabun PSK', 'THSarabunPSK', 'Sarabun', sans-serif;
+                    font-size: 16pt;
+                    background-color: white;
+                    color: #000;
+                    width: 1122px; /* A4 Landscape width at 96 DPI */
+                    padding: 40px;
+                    box-sizing: border-box;
+                    margin: 0 auto;
+                }
+                .pdf-table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    font-size: 16pt;
+                    margin-bottom: 40px;
+                }
+                .pdf-table th, .pdf-table td {
+                    border: 1px solid #000;
+                    padding: 6px;
+                }
+                .pdf-table th {
+                    background-color: #f8fafc;
+                    font-weight: bold;
+                    text-align: center;
+                    vertical-align: middle;
+                }
+            </style>
+            <div class="pdf-wrapper">
+                <div style="text-align: center; margin-bottom: 25px;">
+                    <h1 style="font-size: 24pt; font-weight: bold; margin: 0 0 10px 0;">แบบสรุปการประเมินคุณลักษณะอันพึงประสงค์</h1>
+                    <p style="font-size: 16pt; margin: 0 0 5px 0;">วิชา: ${classNamePart} ชั้น: ${gradeRoomPart}</p>
+                    <p style="font-size: 16pt; margin: 0;">วันที่ประเมิน: ${formattedDate}</p>
+                </div>
+                <table class="pdf-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 5%;">เลขที่</th>
+                            <th style="width: 10%;">รหัสประจำตัว</th>
+                            <th style="width: 25%;">ชื่อ - นามสกุล</th>
+        `;
+
+        const pdfCategories = [
+            'รักชาติ ศาสน์<br>กษัตริย์',
+            'ซื่อสัตย์<br>สุจริต',
+            'มีวินัย',
+            'ใฝ่เรียนรู้',
+            'อยู่อย่าง<br>พอเพียง',
+            'มุ่งมั่นใน<br>การทำงาน',
+            'รักความ<br>เป็นไทย',
+            'มีจิต<br>สาธารณะ'
+        ];
+
+        pdfCategories.forEach(cat => {
+            html += `<th style="width: 6.5%; font-size: 13px;">${cat}</th>`;
+        });
+
+        html += `
+                            <th style="width: 8%;">คะแนนรวม</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+        `;
+        
+        data.forEach(row => {
+            html += `
+                        <tr>
+                            <td style="text-align: center;">${row[0]}</td>
+                            <td style="text-align: center;">${row[1]}</td>
+                            <td style="text-align: left;">${row[2]}</td>
+            `;
+            for (let i = 3; i < 11; i++) {
+                html += `<td style="text-align: center;">${row[i]}</td>`;
+            }
+            html += `<td style="text-align: center; font-weight: bold;">${row[11]}</td></tr>`;
+        });
+
+        html += `
+                    </tbody>
+                </table>
+            </div>
+        `;
+        
+        previewOverlay.innerHTML = `
+            <div style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #2563eb; color: white; padding: 12px 24px; border-radius: 30px; font-family: 'Sarabun', sans-serif; font-size: 18px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 1000000; display: flex; align-items: center; gap: 10px;">
+                <div style="width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.3); border-top: 3px solid white; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+                กำลังจัดเตรียมเอกสาร PDF...
+            </div>
+            <style>@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style>
+            <div id="actual-behavior-pdf-content" style="background: white; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: max-content; margin: 0 auto; text-align: left;">
+                ${html}
+            </div>
+        `;
+        
+        document.body.appendChild(previewOverlay);
+
+        const originalOverflow = document.body.style.overflow;
+        const originalHtmlOverflow = document.documentElement.style.overflow;
+        document.body.style.overflow = 'visible';
+        document.documentElement.style.overflow = 'visible';
+        
+        window.scrollTo(0, 0);
+        
+        const targetElement = document.getElementById('actual-behavior-pdf-content');
+        
+        const opt = {
+            margin:       0,
+            filename:     `${fileName}.pdf`,
+            image:        { type: 'jpeg', quality: 0.98 },
+            html2canvas:  { 
+                scale: 2, 
+                useCORS: true,
+                scrollX: 0,
+                scrollY: 0
+            },
+            jsPDF:        { unit: 'mm', format: 'a4', orientation: 'landscape' }
+        };
+        
+        setTimeout(() => {
+            html2pdf().set(opt).from(targetElement).save().then(() => {
+                document.body.removeChild(previewOverlay);
+                document.body.style.overflow = originalOverflow;
+                document.documentElement.style.overflow = originalHtmlOverflow;
+            });
+        }, 500);
+    }
+};
+
+// ==========================================
 // FEATURE: Health & BMI Tracker
 // ==========================================
 window.renderHealthTable = function() {
@@ -321,17 +609,30 @@ window.renderHealthTable = function() {
         return;
     }
 
-    existingStudents.forEach(student => {
+    existingStudents.forEach((student, index) => {
         const record = healthRecords[student.id] || { weight: '', height: '', bmi: '', status: '-' };
 
+        const rowBgColor = index % 2 === 0 ? 'white' : '#F8FAFC';
         const tr = document.createElement('tr');
+        tr.style.backgroundColor = rowBgColor;
+        tr.style.borderBottom = '1px solid var(--border-color)';
+        
+        let bmiColor = '';
+        if (record.bmi) {
+            if (record.bmi < 18.5) bmiColor = '#3B82F6';
+            else if (record.bmi < 23) bmiColor = '#10B981';
+            else if (record.bmi < 25) bmiColor = '#F59E0B';
+            else bmiColor = '#EF4444';
+        }
+
         tr.innerHTML = `
             <td style="text-align: center;">${student.roll_number || '-'}</td>
+            <td style="text-align: center;">${student.student_id || '-'}</td>
             <td>${student.title}${student.first_name} ${student.last_name}</td>
-            <td><input type="number" class="form-control" style="padding: 0.4rem; height: auto;" data-h-id="${student.id}" data-h-type="weight" value="${record.weight}" onchange="calculateBMI('${student.id}')" placeholder="กก."></td>
-            <td><input type="number" class="form-control" style="padding: 0.4rem; height: auto;" data-h-id="${student.id}" data-h-type="height" value="${record.height}" onchange="calculateBMI('${student.id}')" placeholder="ซม."></td>
-            <td id="bmi-val-${student.id}" style="font-weight: bold; text-align: center;">${record.bmi}</td>
-            <td id="bmi-status-${student.id}">${getBMIStatusHTML(record.status)}</td>
+            <td><input type="number" class="form-control" style="padding: 0.4rem; height: auto; text-align: center;" data-h-id="${student.id}" data-h-type="weight" value="${record.weight}" oninput="calculateBMI('${student.id}')" placeholder="กก."></td>
+            <td><input type="number" class="form-control" style="padding: 0.4rem; height: auto; text-align: center;" data-h-id="${student.id}" data-h-type="height" value="${record.height}" oninput="calculateBMI('${student.id}')" placeholder="ซม."></td>
+            <td id="bmi-val-${student.id}" style="font-weight: bold; text-align: center; color: ${bmiColor};">${record.bmi || '-'}</td>
+            <td id="bmi-status-${student.id}" style="text-align: center;">${getBMIStatusHTML(record.status)}</td>
         `;
         tbody.appendChild(tr);
     });
@@ -355,18 +656,34 @@ window.calculateBMI = function(studentId) {
         else if (bmi < 30) status = 'โรคอ้วน';
         else status = 'โรคอ้วนอันตราย';
 
-        document.getElementById(`bmi-val-${studentId}`).textContent = bmi;
+        const bmiEl = document.getElementById(`bmi-val-${studentId}`);
+        bmiEl.textContent = bmi;
+        
+        if (bmi < 18.5) bmiEl.style.color = '#3B82F6';
+        else if (bmi < 23) bmiEl.style.color = '#10B981';
+        else if (bmi < 25) bmiEl.style.color = '#F59E0B';
+        else bmiEl.style.color = '#EF4444';
+
         document.getElementById(`bmi-status-${studentId}`).innerHTML = getBMIStatusHTML(status);
 
         // Update local object
         healthRecords[studentId] = { weight, height: heightCm, bmi, status };
+    } else {
+        const bmiEl = document.getElementById(`bmi-val-${studentId}`);
+        bmiEl.textContent = '-';
+        bmiEl.style.color = '';
+        document.getElementById(`bmi-status-${studentId}`).innerHTML = '-';
+        healthRecords[studentId] = { weight: weightInput.value, height: heightInput.value, bmi: '', status: '' };
     }
 };
 
 window.getBMIStatusHTML = function(status) {
-    if (status === 'น้ำหนักปกติ') return `<span style="color: #10B981; font-size: 0.9rem;">${status}</span>`;
-    if (status === 'ผอมเกินไป') return `<span style="color: #3B82F6; font-size: 0.9rem;">${status}</span>`;
-    if (status === 'น้ำหนักเกิน' || status === 'โรคอ้วน' || status === 'โรคอ้วนอันตราย') return `<span style="color: #EF4444; font-size: 0.9rem; font-weight: bold;">${status}</span>`;
+    const baseStyle = "padding: 0.2rem 0.6rem; border-radius: 12px; font-size: 0.85rem; font-weight: 500; display: inline-block;";
+    if (status === 'น้ำหนักปกติ') return `<span style="${baseStyle} background-color: #D1FAE5; color: #065F46;">${status}</span>`;
+    if (status === 'ผอมเกินไป') return `<span style="${baseStyle} background-color: #DBEAFE; color: #1E40AF;">${status}</span>`;
+    if (status === 'น้ำหนักเกิน') return `<span style="${baseStyle} background-color: #FEF3C7; color: #92400E;">${status}</span>`;
+    if (status === 'โรคอ้วน') return `<span style="${baseStyle} background-color: #FEE2E2; color: #B91C1C;">${status}</span>`;
+    if (status === 'โรคอ้วนอันตราย') return `<span style="${baseStyle} background-color: #FECACA; color: #991B1B; font-weight: bold;">${status}</span>`;
     return '-';
 };
 
@@ -422,6 +739,238 @@ window.saveAllHealthData = async function() {
     } finally {
         btn.disabled = false;
         btn.innerHTML = originalText;
+    }
+};
+
+window.toggleHealthDownloadMenu = function() {
+    const menu = document.getElementById('healthDownloadMenu');
+    menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+};
+
+// Close menu when clicking outside
+document.addEventListener('click', function(event) {
+    const healthMenu = document.getElementById('healthDownloadMenu');
+    if (healthMenu && healthMenu.style.display === 'block') {
+        const btn = healthMenu.previousElementSibling;
+        if (!healthMenu.contains(event.target) && event.target !== btn && !btn.contains(event.target)) {
+            healthMenu.style.display = 'none';
+        }
+    }
+});
+
+window.exportHealth = function(type) {
+    document.getElementById('healthDownloadMenu').style.display = 'none';
+    
+    if (typeof existingStudents === 'undefined' || existingStudents.length === 0) {
+        window.showAppAlert('ไม่พบข้อมูลนักเรียน');
+        return;
+    }
+
+    const sortedStudents = [...existingStudents].sort((a, b) => parseInt(a.roll_number || 999) - parseInt(b.roll_number || 999));
+    
+    const headers = ['เลขที่', 'รหัสนักเรียน', 'ชื่อ-นามสกุล', 'น้ำหนัก (กก.)', 'ส่วนสูง (ซม.)', 'BMI', 'สถานะ'];
+
+    const data = sortedStudents.map(student => {
+        const record = healthRecords[student.id] || { weight: '-', height: '-', bmi: '-', status: '-' };
+        return [
+            student.roll_number || '-',
+            student.student_id || '-',
+            `${student.title}${student.first_name} ${student.last_name}`,
+            record.weight || '-',
+            record.height || '-',
+            record.bmi || '-',
+            record.status || '-'
+        ];
+    });
+
+    let classNamePart = 'รายวิชา';
+    let gradeRoomPart = '';
+    
+    if (window.currentClassData) {
+        const cls = window.currentClassData;
+        classNamePart = cls.type === 'homeroom' ? 'ห้องประจำชั้น' : (cls.subject_name || 'รายวิชา');
+        gradeRoomPart = `${cls.grade_level || ''}/${cls.room_number || ''}`;
+    }
+
+    const formattedDate = new Date().toLocaleDateString('th-TH', { day: 'numeric', month: 'long', year: 'numeric' });
+    const fileName = `บันทึกสุขภาพ_${classNamePart}_${gradeRoomPart}`.replace(/\s+/g, '_').replace(/\//g, '-');
+
+    if (type === 'csv') {
+        let csvContent = '\uFEFF' + headers.join(',') + '\n';
+        data.forEach(row => {
+            csvContent += row.map(cell => `"${cell}"`).join(',') + '\n';
+        });
+        
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.setAttribute('download', `${fileName}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+    } else if (type === 'xlsx') {
+        if (typeof XLSX === 'undefined') {
+            window.showAppAlert('ไม่พบไลบรารีสำหรับสร้างไฟล์ Excel');
+            return;
+        }
+        const ws = XLSX.utils.aoa_to_sheet([headers, ...data]);
+        
+        const range = XLSX.utils.decode_range(ws['!ref']);
+        for (let R = range.s.r; R <= range.e.r; ++R) {
+            for (let C = range.s.c; C <= range.e.c; ++C) {
+                const cell_address = {c:C, r:R};
+                const cell_ref = XLSX.utils.encode_cell(cell_address);
+                if (!ws[cell_ref]) continue;
+                if (!ws[cell_ref].s) ws[cell_ref].s = {};
+                
+                ws[cell_ref].s.font = { name: 'THSarabunPSK', sz: 16 };
+                if (R === 0) ws[cell_ref].s.font.bold = true;
+                
+                ws[cell_ref].s.alignment = { 
+                    vertical: 'center', 
+                    horizontal: (C >= 3) ? 'center' : 'left' 
+                };
+            }
+        }
+        
+        ws['!cols'] = [
+            {wch: 8}, {wch: 15}, {wch: 35}, {wch: 15}, {wch: 15}, {wch: 15}, {wch: 25}
+        ];
+        
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "บันทึกสุขภาพ");
+        XLSX.writeFile(wb, `${fileName}.xlsx`);
+        
+    } else if (type === 'pdf') {
+        if (typeof html2pdf === 'undefined') {
+            window.showAppAlert('ไม่พบไลบรารีสำหรับสร้าง PDF');
+            return;
+        }
+        
+        const previewOverlay = document.createElement('div');
+        previewOverlay.style.position = 'absolute';
+        previewOverlay.style.top = '0';
+        previewOverlay.style.left = '0';
+        previewOverlay.style.minWidth = '100vw';
+        previewOverlay.style.minHeight = '100vh';
+        previewOverlay.style.backgroundColor = '#e2e8f0';
+        previewOverlay.style.zIndex = '999999';
+        previewOverlay.style.display = 'block'; 
+        previewOverlay.style.padding = '80px 20px 40px 20px';
+        previewOverlay.style.textAlign = 'center';
+        
+        let html = `
+            <style>
+                @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap');
+                .pdf-wrapper {
+                    font-family: 'TH Sarabun PSK', 'THSarabunPSK', 'Sarabun', sans-serif;
+                    font-size: 16pt;
+                    background-color: white;
+                    color: #000;
+                    width: 794px; /* A4 Portrait width */
+                    padding: 40px;
+                    box-sizing: border-box;
+                    margin: 0 auto;
+                }
+                .pdf-table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    font-size: 16pt;
+                    margin-bottom: 40px;
+                }
+                .pdf-table th, .pdf-table td {
+                    border: 1px solid #000;
+                    padding: 8px;
+                }
+                .pdf-table th {
+                    background-color: #f8fafc;
+                    font-weight: bold;
+                    text-align: center;
+                    vertical-align: middle;
+                }
+            </style>
+            <div class="pdf-wrapper">
+                <div style="text-align: center; margin-bottom: 25px;">
+                    <h1 style="font-size: 24pt; font-weight: bold; margin: 0 0 10px 0;">บันทึกสุขภาพและ BMI</h1>
+                    <p style="font-size: 16pt; margin: 0 0 5px 0;">วิชา: ${classNamePart} ชั้น: ${gradeRoomPart}</p>
+                    <p style="font-size: 16pt; margin: 0;">วันที่ประเมิน: ${formattedDate}</p>
+                </div>
+                <table class="pdf-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 8%;">เลขที่</th>
+                            <th style="width: 15%;">รหัสนักเรียน</th>
+                            <th style="width: 32%;">ชื่อ - นามสกุล</th>
+                            <th style="width: 15%;">น้ำหนัก (กก.)</th>
+                            <th style="width: 15%;">ส่วนสูง (ซม.)</th>
+                            <th style="width: 15%;">BMI</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+        `;
+        
+        data.forEach(row => {
+            html += `
+                        <tr>
+                            <td style="text-align: center;">${row[0]}</td>
+                            <td style="text-align: center;">${row[1]}</td>
+                            <td style="text-align: left;">${row[2]}</td>
+                            <td style="text-align: center;">${row[3]}</td>
+                            <td style="text-align: center;">${row[4]}</td>
+                            <td style="text-align: center; font-weight: bold;">${row[5]} <br><small>(${row[6]})</small></td>
+                        </tr>
+            `;
+        });
+
+        html += `
+                    </tbody>
+                </table>
+            </div>
+        `;
+        
+        previewOverlay.innerHTML = `
+            <div style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #2563eb; color: white; padding: 12px 24px; border-radius: 30px; font-family: 'Sarabun', sans-serif; font-size: 18px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 1000000; display: flex; align-items: center; gap: 10px;">
+                <div style="width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.3); border-top: 3px solid white; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+                กำลังจัดเตรียมเอกสาร PDF...
+            </div>
+            <style>@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style>
+            <div id="actual-health-pdf-content" style="background: white; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: max-content; margin: 0 auto; text-align: left;">
+                ${html}
+            </div>
+        `;
+        
+        document.body.appendChild(previewOverlay);
+
+        const originalOverflow = document.body.style.overflow;
+        const originalHtmlOverflow = document.documentElement.style.overflow;
+        document.body.style.overflow = 'visible';
+        document.documentElement.style.overflow = 'visible';
+        
+        window.scrollTo(0, 0);
+        
+        const targetElement = document.getElementById('actual-health-pdf-content');
+        
+        const opt = {
+            margin:       0,
+            filename:     `${fileName}.pdf`,
+            image:        { type: 'jpeg', quality: 0.98 },
+            html2canvas:  { 
+                scale: 2, 
+                useCORS: true,
+                scrollX: 0,
+                scrollY: 0
+            },
+            jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+        
+        setTimeout(() => {
+            html2pdf().set(opt).from(targetElement).save().then(() => {
+                document.body.removeChild(previewOverlay);
+                document.body.style.overflow = originalOverflow;
+                document.documentElement.style.overflow = originalHtmlOverflow;
+            });
+        }, 500);
     }
 };
 
