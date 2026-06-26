@@ -117,6 +117,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
             if (phoneInput) {
                 phoneInput.value = user.user_metadata?.phone || '';
+                // Initialize intl-tel-input
+                window.iti = window.intlTelInput(phoneInput, {
+                    initialCountry: "th",
+                    utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.2.1/js/utils.js",
+                });
             }
             if (schoolNameInput) schoolNameInput.value = user.user_metadata?.school_name || '';
             if (schoolAreaInput) schoolAreaInput.value = user.user_metadata?.school_area || '';
@@ -229,11 +234,16 @@ document.addEventListener('DOMContentLoaded', async () => {
                     }
 
                     // แปลงเบอร์โทรให้อยู่ในรูปแบบ E.164 สำหรับ Supabase (ถ้าเป็นเบอร์ไทย)
-                    let formattedPhone = phoneVal.replace(/[-\s]/g, '');
-                    if (formattedPhone.startsWith('0')) {
-                        formattedPhone = '+66' + formattedPhone.substring(1);
-                    } else if (!formattedPhone.startsWith('+')) {
-                        formattedPhone = '+' + formattedPhone; // กรณีผู้ใช้พิมพ์ 668... มาเลยโดยไม่มี +
+                    let formattedPhone = '';
+                    if (window.iti) {
+                        formattedPhone = window.iti.getNumber();
+                    } else {
+                        formattedPhone = phoneVal.replace(/[-\s]/g, '');
+                        if (formattedPhone.startsWith('0')) {
+                            formattedPhone = '+66' + formattedPhone.substring(1);
+                        } else if (!formattedPhone.startsWith('+')) {
+                            formattedPhone = '+' + formattedPhone; // กรณีผู้ใช้พิมพ์ 668... มาเลยโดยไม่มี +
+                        }
                     }
 
                     const originalText = saveBtn.textContent;
