@@ -242,6 +242,12 @@
     font-size: 1.1rem;
 }
 
+/* intl-tel-input override */
+.iti {
+    width: 100%;
+    display: block;
+}
+
 @media (max-width: 768px) {
     .settings-header {
         padding: 1.5rem 1.5rem 1rem 1.5rem;
