@@ -161,9 +161,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     try {
-        const { count, error } = await supabaseClient.from('students').select('*', { count: 'exact', head: true }).eq('teacher_id', currentUser.id);
-        if (error) console.error(error);
-        if (statTotalStudents) statTotalStudents.textContent = count || 0;
+        const { data: teacherClassrooms, error: tcError } = await supabaseClient.from('classrooms').select('id').eq('teacher_id', currentUser.id);
+        if (!tcError && teacherClassrooms && teacherClassrooms.length > 0) {
+            const classIds = teacherClassrooms.map(c => c.id);
+            const { count, error } = await supabaseClient.from('students').select('*', { count: 'exact', head: true }).in('classroom_id', classIds);
+            if (error) console.error(error);
+            if (statTotalStudents) statTotalStudents.textContent = count || 0;
+        } else {
+            if (statTotalStudents) statTotalStudents.textContent = '0';
+        }
     } catch (e) {
         if (statTotalStudents) statTotalStudents.textContent = '0';
     }
